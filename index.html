@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BunkerWeb · Feature Pricing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --accent:    #4ade80;
+      --accent-dim:#16a34a;
+      --text:      #e2e8f0;
+      --muted:     #8492b4;
+      --danger:    #ef4444;
+      --radius:    10px;
+      --transition: .18s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top nav ────────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      text-decoration: none;
+    }
+
+    .nav-logo .bunker { font-size: 1.35rem; font-weight: 700; color: var(--text); letter-spacing: -.5px; }
+    .nav-logo .web    { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+
+    .logo-box {
+      width: 34px; height: 34px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-box svg { width: 20px; height: 20px; fill: #0f1117; }
+
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-right { display: flex; align-items: center; gap: .75rem; }
+
+    .btn-outline {
+      padding: .45rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text);
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      text-decoration: none;
+    }
+    .btn-outline:hover { background: var(--surface2); border-color: var(--muted); }
+
+    .btn-accent {
+      padding: .45rem 1.1rem;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #0f1117;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity var(--transition);
+      text-decoration: none;
+    }
+    .btn-accent:hover { opacity: .85; }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 5rem 1rem 3rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.18;
+      max-width: 700px;
+      margin: 0 auto .9rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Section heading ─────────────────────────────────────── */
+    .section-title {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Feature cards ───────────────────────────────────────── */
+    .features-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .feature-group-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .9rem 1.25rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .feature-group-header:hover { background: #2a2f47; }
+
+    .group-icon {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .group-name { font-weight: 600; font-size: .95rem; flex: 1; }
+    .group-badge {
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .2rem .55rem;
+      border-radius: 99px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .group-badge.active { background: #14532d; border-color: var(--accent-dim); color: var(--accent); }
+
+    .chevron {
+      width: 18px; height: 18px;
+      color: var(--muted);
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+    .feature-group.open .chevron { transform: rotate(180deg); }
+
+    .feature-items { display: none; }
+    .feature-group.open .feature-items { display: block; }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .feature-item:last-child { border-bottom: none; }
+    .feature-item:hover { background: #1e2236; }
+
+    .feature-check {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+      background: var(--surface);
+    }
+    .feature-check:hover { border-color: var(--accent); }
+    .feature-check.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .feature-check.checked svg { display: block; }
+    .feature-check svg { display: none; width: 12px; height: 12px; fill: #0f1117; }
+
+    .feature-info { flex: 1; }
+    .feature-name { font-size: .9rem; font-weight: 500; }
+    .feature-desc { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
+
+    .feature-price {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .feature-price.free { color: var(--muted); }
+
+    /* ── Sticky sidebar ──────────────────────────────────────── */
+    .sidebar {
+      position: sticky;
+      top: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .price-display {
+      text-align: center;
+      padding: 1.5rem 1.25rem;
+    }
+    .price-label { font-size: .75rem; color: var(--muted); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+    .price-amount {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+      margin: .3rem 0 .1rem;
+    }
+    .price-amount span { font-size: 1.5rem; color: var(--muted); vertical-align: super; font-weight: 500; }
+    .price-period { font-size: .8rem; color: var(--muted); }
+
+    .line-items { display: flex; flex-direction: column; gap: .55rem; margin-top: .5rem; }
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: .82rem;
+    }
+    .line-item .li-name { color: var(--muted); }
+    .line-item .li-price { font-weight: 500; }
+    .line-divider { border: none; border-top: 1px solid var(--border); margin: .6rem 0; }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: .9rem;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: .85rem;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #0f1117;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      margin-top: .5rem;
+    }
+    .btn-generate:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-generate:active { transform: translateY(0); }
+    .btn-generate:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      font-size: .83rem;
+      padding: .5rem 0;
+    }
+
+    /* ── API Key modal ───────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: min(520px, 90vw);
+      padding: 2rem;
+      transform: translateY(20px);
+      transition: transform .25s ease;
+    }
+    .modal-overlay.visible .modal { transform: translateY(0); }
+
+    .modal-logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .modal-logo .logo-box { width: 50px; height: 50px; border-radius: 10px; }
+    .modal-logo .logo-box svg { width: 28px; height: 28px; }
+
+    .modal h2 { font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: .4rem; }
+    .modal .modal-sub { text-align: center; color: var(--muted); font-size: .85rem; margin-bottom: 1.5rem; }
+
+    .api-key-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .api-key-text {
+      flex: 1;
+      font-family: 'Courier New', monospace;
+      font-size: .82rem;
+      color: var(--accent);
+      word-break: break-all;
+    }
+    .copy-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .4rem .7rem;
+      color: var(--text);
+      font-size: .75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--transition);
+    }
+    .copy-btn:hover { background: var(--border); }
+    .copy-btn.copied { color: var(--accent); border-color: var(--accent-dim); }
+
+    .selected-features-list {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: .85rem 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .selected-features-list p {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .sel-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-size: .78rem;
+      background: #14532d;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      border-radius: 99px;
+      padding: .18rem .6rem;
+      margin: .2rem .2rem 0 0;
+    }
+
+    .modal-footer { display: flex; gap: .75rem; }
+    .modal-footer button { flex: 1; }
+
+    /* ── Toggle switch ───────────────────────────────────────── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .toggle {
+      width: 38px; height: 22px;
+      background: var(--border);
+      border-radius: 99px;
+      position: relative;
+      cursor: pointer;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--accent); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      top: 3px; left: 3px;
+      transition: left var(--transition);
+    }
+    .toggle.on::after { left: 19px; }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.32 5 15.5v-7l7-4.32z"/></svg>
+    </div>
+    <span class="bunker">BUNKER</span><span class="web">web</span>
+  </a>
+  <div class="nav-links">
+    <a href="https://docs.bunkerweb.io" target="_blank">Documentation</a>
+    <a href="https://github.com/bunkerity/bunkerweb" target="_blank">Github</a>
+    <a href="https://discord.com/invite/fTf46FmtyD" target="_blank">Discord</a>
+  </div>
+  <div class="nav-right">
+    <a href="https://github.com/bunkerity/bunkerweb" target="_blank" class="btn-outline">⭐ Stars 10,123</a>
+    <a href="https://panel.bunkerweb.io" target="_blank" class="btn-accent">Upgrade to PRO</a>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<div class="hero">
+  <h1>Build your <span>BunkerWeb</span><br/>security stack</h1>
+  <p>Pick the features you need, see live pricing, and get your API key in seconds.</p>
+</div>
+
+<!-- ── Main layout ─────────────────────────────────────────── -->
+<div class="container">
+  <div class="layout">
+
+    <!-- Left: feature groups -->
+    <div>
+      <p class="section-title">Available features</p>
+
+      <div class="features-grid" id="featuresGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Right: pricing sidebar -->
+    <div class="sidebar">
+
+      <div class="toggle-row card" style="padding:.85rem 1.25rem;">
+        <span>Billing: <strong id="billingLabel">Monthly</strong></span>
+        <div class="toggle" id="billingToggle"></div>
+      </div>
+
+      <div class="card price-display">
+        <div class="price-label">Total per month</div>
+        <div class="price-amount"><span>$</span><span id="totalPrice">0</span></div>
+        <div class="price-period" id="pricePeriod">$0 / year (billed monthly)</div>
+      </div>
+
+      <div class="card">
+        <p class="section-title">Selected features</p>
+        <div class="line-items" id="lineItems">
+          <p class="empty-state">No features selected yet.</p>
+        </div>
+        <hr class="line-divider" />
+        <div class="summary-total">
+          <span>Total</span>
+          <span id="summaryTotal">$0 / mo</span>
+        </div>
+        <button class="btn-generate" id="generateBtn" disabled>
+          Generate API Key →
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── API Key Modal ───────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-logo">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24" style="fill:#0f1117"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.32 5 15.5v-7l7-4.32z"/></svg>
+      </div>
+    </div>
+    <h2>Your API Key is ready</h2>
+    <p class="modal-sub">Keep this key safe — it grants access to your selected BunkerWeb features.</p>
+
+    <div class="api-key-box">
+      <span class="api-key-text" id="apiKeyText"></span>
+      <button class="copy-btn" id="copyBtn" onclick="copyKey()">Copy</button>
+    </div>
+
+    <div class="selected-features-list">
+      <p>Included features</p>
+      <div id="modalFeatureChips"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">Close</button>
+      <button class="btn-accent" onclick="regenKey()">Regenerate key</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Built with the BunkerWeb open-source spirit · <a href="https://github.com/bunkerity/bunkerweb" target="_blank" style="color:var(--accent);text-decoration:none;">github.com/bunkerity/bunkerweb</a>
+</footer>
+
+<script>
+// ── Feature data ────────────────────────────────────────────
+const GROUPS = [
+  {
+    id: 'core',
+    name: 'Core Protection',
+    icon: '🛡️',
+    color: '#4ade80',
+    bg: '#14532d',
+    features: [
+      { id: 'waf',        name: 'Web Application Firewall (WAF)',      desc: 'ModSecurity-based WAF with OWASP CRS ruleset',              price: 0    },
+      { id: 'ratelimit',  name: 'Rate Limiting',                       desc: 'Protect endpoints from brute-force and abuse',              price: 5    },
+      { id: 'antibot',    name: 'Anti-Bot Challenge',                  desc: 'JS challenge, captcha, and browser fingerprinting',         price: 9    },
+      { id: 'blacklist',  name: 'IP / DNSBL Blacklisting',             desc: 'Block known malicious IPs via threat intelligence feeds',   price: 7    },
+    ]
+  },
+  {
+    id: 'auth',
+    name: 'Authentication & Access',
+    icon: '🔐',
+    color: '#60a5fa',
+    bg: '#1e3a5f',
+    features: [
+      { id: 'basicauth',  name: 'HTTP Basic Auth',                     desc: 'Password-protect any route or service',                    price: 0    },
+      { id: 'authreq',    name: 'Auth Request (SSO)',                   desc: 'Delegate auth to an external identity provider',           price: 12   },
+      { id: 'mfa',        name: 'Multi-Factor Authentication',         desc: 'TOTP / passkey second factor enforcement',                  price: 15   },
+    ]
+  },
+  {
+    id: 'tls',
+    name: 'TLS & Certificates',
+    icon: '🔒',
+    color: '#f59e0b',
+    bg: '#451a03',
+    features: [
+      { id: 'letsencrypt',name: "Let's Encrypt Auto-Renewal",          desc: 'Automatic ACME certificate issuance and renewal',           price: 0    },
+      { id: 'customcert', name: 'Custom Certificate Upload',           desc: 'Bring your own wildcard or EV certificate',                price: 4    },
+      { id: 'hsts',       name: 'HSTS + HSTS Preload',                 desc: 'Enforce strict transport security headers',                 price: 0    },
+      { id: 'mtls',       name: 'Mutual TLS (mTLS)',                   desc: 'Client certificate authentication for zero-trust access',  price: 10   },
+    ]
+  },
+  {
+    id: 'cache',
+    name: 'Caching & Performance',
+    icon: '⚡',
+    color: '#a78bfa',
+    bg: '#2e1065',
+    features: [
+      { id: 'redis',      name: 'Redis Cluster Integration',           desc: 'Shared session & cache store with sentinel support',        price: 8    },
+      { id: 'staticcache',name: 'Static Asset Caching',                desc: 'Edge caching for images, CSS, JS with cache-control',       price: 5    },
+      { id: 'gzip',       name: 'Gzip / Brotli Compression',           desc: 'Automatic response compression to reduce bandwidth',        price: 0    },
+    ]
+  },
+  {
+    id: 'monitoring',
+    name: 'Monitoring & Reporting',
+    icon: '📊',
+    color: '#f472b6',
+    bg: '#500724',
+    features: [
+      { id: 'logs',       name: 'Structured JSON Logs',                desc: 'Machine-readable access and security event logs',           price: 0    },
+      { id: 'reports',    name: 'Security Reports Dashboard',          desc: 'Visual dashboard with threat and traffic analytics',        price: 14   },
+      { id: 'alerting',   name: 'Real-Time Alerting (Slack / email)',  desc: 'Instant notifications on attacks and anomalies',            price: 11   },
+      { id: 'siem',       name: 'SIEM Export (Splunk / Elastic)',      desc: 'Forward events to your SIEM pipeline via syslog or HTTP',  price: 18   },
+    ]
+  },
+  {
+    id: 'advanced',
+    name: 'Advanced Features',
+    icon: '🚀',
+    color: '#34d399',
+    bg: '#064e3b',
+    features: [
+      { id: 'crowdsec',   name: 'CrowdSec Integration',                desc: 'Collaborative threat intelligence & behavioral analysis',   price: 10   },
+      { id: 'bans',       name: 'Automatic IP Banning',                desc: 'Temporary and permanent bans with allow-list support',      price: 0    },
+      { id: 'geoblocking',name: 'Geo-Blocking',                        desc: 'Allow or deny traffic by country code',                    price: 6    },
+      { id: 'grpc',       name: 'gRPC Proxying',                       desc: 'Reverse-proxy gRPC services with HTTP/2',                  price: 8    },
+      { id: 'plugins',    name: 'Custom Plugin Support',               desc: 'Extend BunkerWeb with your own Lua or Python plugins',     price: 20   },
+    ]
+  }
+];
+
+// ── State ────────────────────────────────────────────────────
+const selected = new Set();
+let annual = false;
+
+// ── Render feature groups ────────────────────────────────────
+function render() {
+  const grid = document.getElementById('featuresGrid');
+  grid.innerHTML = '';
+
+  GROUPS.forEach(group => {
+    const activeCount = group.features.filter(f => selected.has(f.id)).length;
+    const isOpen = activeCount > 0;
+
+    const el = document.createElement('div');
+    el.className = 'feature-group' + (isOpen ? ' open' : '');
+    el.innerHTML = `
+      <div class="feature-group-header" onclick="toggleGroup(this)">
+        <div class="group-icon" style="background:${group.bg}; color:${group.color}; font-size:.95rem;">${group.icon}</div>
+        <span class="group-name">${group.name}</span>
+        <span class="group-badge ${activeCount ? 'active' : ''}">${activeCount}/${group.features.length}</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="feature-items">
+        ${group.features.map(f => `
+          <div class="feature-item" onclick="toggleFeature('${f.id}', event)">
+            <div class="feature-check ${selected.has(f.id) ? 'checked' : ''}" id="check-${f.id}">
+              <svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#0f1117" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </div>
+            <div class="feature-info">
+              <div class="feature-name">${f.name}</div>
+              <div class="feature-desc">${f.desc}</div>
+            </div>
+            <div class="feature-price ${f.price === 0 ? 'free' : ''}">${f.price === 0 ? 'Free' : '$' + f.price + '/mo'}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    grid.appendChild(el);
+  });
+
+  updateSidebar();
+}
+
+function toggleGroup(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function toggleFeature(id, e) {
+  if (e.target.closest('.feature-check')) {
+    // clicked directly on checkbox — handle below
+  }
+  if (selected.has(id)) {
+    selected.delete(id);
+  } else {
+    selected.add(id);
+  }
+  render();
+}
+
+// ── Sidebar update ───────────────────────────────────────────
+function calcTotal() {
+  let total = 0;
+  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) total += f.price; }));
+  if (annual) total = Math.round(total * 12 * 0.8); // 20% annual discount
+  return total;
+}
+
+function updateSidebar() {
+  const total = calcTotal();
+  const monthly = calcMonthlyTotal();
+
+  document.getElementById('totalPrice').textContent = annual ? (total / 12).toFixed(0) : total;
+  document.getElementById('pricePeriod').textContent = annual
+    ? `$${total} / year (2 months free)`
+    : `$${total * 12} / year (billed monthly)`;
+  document.getElementById('billingLabel').textContent = annual ? 'Annual' : 'Monthly';
+  document.getElementById('summaryTotal').textContent = annual ? `$${(total/12).toFixed(0)} / mo` : `$${monthly} / mo`;
+
+  // Line items
+  const li = document.getElementById('lineItems');
+  const items = [];
+  GROUPS.forEach(g => g.features.forEach(f => {
+    if (selected.has(f.id)) items.push(f);
+  }));
+
+  if (items.length === 0) {
+    li.innerHTML = '<p class="empty-state">No features selected yet.</p>';
+  } else {
+    li.innerHTML = items.map(f =>
+      `<div class="line-item">
+        <span class="li-name">${f.name}</span>
+        <span class="li-price">${f.price === 0 ? 'Free' : '$' + f.price}</span>
+      </div>`
+    ).join('');
+  }
+
+  document.getElementById('generateBtn').disabled = items.length === 0;
+}
+
+function calcMonthlyTotal() {
+  let total = 0;
+  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) total += f.price; }));
+  return total;
+}
+
+// ── Billing toggle ───────────────────────────────────────────
+document.getElementById('billingToggle').addEventListener('click', function() {
+  annual = !annual;
+  this.classList.toggle('on', annual);
+  updateSidebar();
+});
+
+// ── API Key generation ───────────────────────────────────────
+function generateKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const seg = n => Array.from({length: n}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  return `bwk_${seg(8)}_${seg(16)}_${seg(8)}`;
+}
+
+document.getElementById('generateBtn').addEventListener('click', openModal);
+
+function openModal() {
+  const key = generateKey();
+  document.getElementById('apiKeyText').textContent = key;
+  document.getElementById('copyBtn').textContent = 'Copy';
+  document.getElementById('copyBtn').classList.remove('copied');
+
+  const chips = document.getElementById('modalFeatureChips');
+  const items = [];
+  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) items.push(f); }));
+  chips.innerHTML = items.map(f => `<span class="sel-chip">✓ ${f.name}</span>`).join('');
+
+  document.getElementById('modalOverlay').classList.add('visible');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('visible');
+}
+
+function regenKey() {
+  document.getElementById('apiKeyText').textContent = generateKey();
+  document.getElementById('copyBtn').textContent = 'Copy';
+  document.getElementById('copyBtn').classList.remove('copied');
+}
+
+function copyKey() {
+  const text = document.getElementById('apiKeyText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── Init ─────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

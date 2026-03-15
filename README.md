@@ -1,64 +1,63 @@
-# BunkerWeb Feature Pricing Page
+# BunkerWeb Pricing Page
 
-A static GitHub Pages site styled after [BunkerWeb](https://github.com/bunkerity/bunkerweb) that lets users interactively build their own security feature stack, see live pricing, and generate a random API key.
+A static GitHub Pages site styled after [BunkerWeb](https://github.com/bunkerity/bunkerweb) that replicates the official pricing structure — self-hosted plans, cloud offer, PRO feature selection, instance-based pricing, and API key generation.
 
 ## Live Demo
 
-> Deploy to GitHub Pages (see below) and your URL will be:
-> `https://<your-username>.github.io/<repo-name>/`
+Deploy to GitHub Pages and your URL will be:
+`https://<your-username>.github.io/<repo-name>/`
 
 ---
 
-## Features
+## What's on the page
 
-- **BunkerWeb-style dark UI** — matches the official dashboard aesthetic (dark theme, green accent, Inter font)
-- **6 feature groups** spanning Core Protection, Auth, TLS, Caching, Monitoring, and Advanced features
-- **Live pricing sidebar** — total updates instantly as you toggle features
-- **Monthly / Annual billing toggle** — annual plan shows 20% discount
-- **API key generator** — clicking "Generate API Key" produces a unique `bwk_xxx_xxx_xxx` key
-- **Copy to clipboard** — one-click copy inside the modal
-- **Zero dependencies** — single `index.html`, no build step, no npm
+### PRO Features (all included in every paid plan)
 
----
+| Feature | Description |
+|---|---|
+| 🌊 Anti-DDoS | Advanced protection against DDoS attacks |
+| ☁️ Backup S3 | Remote backup to Amazon S3 |
+| 🔄 Migration | Easily migrate the database between environments |
+| 📊 Monitoring | Monitor service status and performance |
+| 📈 Prometheus Exporter | Exposes metrics for Prometheus, compatible with Grafana |
+| 📋 Reporting | Generates weekly or monthly usage and threat reports |
+| 👥 User Manager | Manage users and their access rights |
 
-## Feature Groups & Pricing
+### Self-Hosted Plans
 
-| Group | Feature | Price |
+| Plan | Price | Best for |
 |---|---|---|
-| Core Protection | Web Application Firewall (WAF) | Free |
-| Core Protection | Rate Limiting | $5/mo |
-| Core Protection | Anti-Bot Challenge | $9/mo |
-| Core Protection | IP / DNSBL Blacklisting | $7/mo |
-| Authentication | HTTP Basic Auth | Free |
-| Authentication | Auth Request (SSO) | $12/mo |
-| Authentication | Multi-Factor Authentication | $15/mo |
-| TLS & Certificates | Let's Encrypt Auto-Renewal | Free |
-| TLS & Certificates | Custom Certificate Upload | $4/mo |
-| TLS & Certificates | HSTS + Preload | Free |
-| TLS & Certificates | Mutual TLS (mTLS) | $10/mo |
-| Caching & Performance | Redis Cluster Integration | $8/mo |
-| Caching & Performance | Static Asset Caching | $5/mo |
-| Caching & Performance | Gzip / Brotli Compression | Free |
-| Monitoring | Structured JSON Logs | Free |
-| Monitoring | Security Reports Dashboard | $14/mo |
-| Monitoring | Real-Time Alerting | $11/mo |
-| Monitoring | SIEM Export | $18/mo |
-| Advanced | CrowdSec Integration | $10/mo |
-| Advanced | Automatic IP Banning | Free |
-| Advanced | Geo-Blocking | $6/mo |
-| Advanced | gRPC Proxying | $8/mo |
-| Advanced | Custom Plugin Support | $20/mo |
+| 🛡️ Shield (Standard) | 49€/mo + 15€/extra instance | SMBs, startups, growing IT projects |
+| 🏰 Fortress (Enterprise) | 149€/mo + 39€/extra instance | Multi-site orgs, healthcare, finance, education |
+| 🔭 Sentinel (Custom) | Get a quote | Specific / enterprise-scale needs |
+
+### Cloud Plans
+
+| Plan | Price | Notes |
+|---|---|---|
+| ☁️ The Essential | Starting from 639€/mo | Fully managed SaaS by BunkerWeb maintainers |
+| 🔧 Need More? | Custom quote | 50+ services, custom SLA, custom dev |
+
+### Interactive features
+
+- **PRO feature picker** — click features to highlight what matters most to you
+- **Instance slider** — drag from 1 to 20; price recalculates live per plan
+- **Self-hosted / Cloud tab** — switches between the two offering types
+- **Sticky summary bar** — shows selected plan, price, and chosen PRO features
+- **API key generator** — clicking "Get API Key" shows a `bwk_xxx_xxx_xxx` key with copy-to-clipboard
+- **30-day trial callout** — shown for Shield and Fortress plans
+- Zero dependencies — single `index.html`, no build step
 
 ---
 
 ## Deploy to GitHub Pages
 
-### Option 1 — Automatic (recommended)
+### Option 1 — Settings UI (simplest)
 
-1. Fork or push this repo to GitHub.
+1. Push this repo to GitHub.
 2. Go to **Settings → Pages**.
 3. Set **Source** to `Deploy from a branch`, branch `main`, folder `/ (root)`.
-4. Click **Save** — your site will be live within ~60 seconds.
+4. Click **Save** — live in ~60 seconds.
 
 ### Option 2 — GitHub Actions
 
@@ -91,37 +90,31 @@ jobs:
 
 ---
 
-## Run Locally
-
-No build step needed — just open the file:
+## Run locally
 
 ```bash
 # macOS
 open index.html
 
-# Linux
-xdg-open index.html
-
-# Or serve with any static server
+# Or serve with any static file server
 npx serve .
 python3 -m http.server 8080
 ```
 
 ---
 
-## Customising
+## Customising prices
 
-All feature data lives in the `GROUPS` array at the top of the `<script>` block in `index.html`. Each feature has:
+All data is in the `<script>` block of `index.html`:
 
-```js
-{ id: 'unique_id', name: 'Display Name', desc: 'Short description', price: 0 }
-```
-
-Set `price: 0` for free features — the UI renders them as "Free" automatically.
+- **`PRO_FEATURES`** — the 7 PRO add-on cards
+- **`SELF_PLANS`** — Shield, Fortress, Sentinel; edit `basePrice` and `extraPerInstance`
+- **`CLOUD_PLANS`** — The Essential and custom cloud plans
 
 ---
 
 ## Credits
 
-- UI inspired by [BunkerWeb](https://www.bunkerweb.io/) — the open-source Web Application Firewall
+- Pricing and feature set: [bunkerweb.io](https://www.bunkerweb.io/)
+- Open-source WAF: [github.com/bunkerity/bunkerweb](https://github.com/bunkerity/bunkerweb)
 - Font: [Inter](https://fonts.google.com/specimen/Inter) via Google Fonts

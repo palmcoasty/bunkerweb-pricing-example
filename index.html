@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BunkerWeb · Feature Pricing</title>
+  <title>BunkerWeb · Pricing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & base ───────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -17,457 +16,393 @@
       --border:    #2e3350;
       --accent:    #4ade80;
       --accent-dim:#16a34a;
+      --accent-bg: #0d2b1a;
       --text:      #e2e8f0;
       --muted:     #8492b4;
-      --danger:    #ef4444;
-      --radius:    10px;
-      --transition: .18s ease;
+      --gold:      #f59e0b;
+      --gold-bg:   #1c1407;
+      --blue:      #60a5fa;
+      --blue-bg:   #0d1f3c;
+      --purple:    #a78bfa;
+      --purple-bg: #1a1040;
+      --radius:    12px;
+      --t:         .18s ease;
     }
 
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── Top nav ────────────────────────────────────────────── */
+    /* ── Nav ── */
     nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 64px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
     }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      text-decoration: none;
-    }
-
-    .nav-logo .bunker { font-size: 1.35rem; font-weight: 700; color: var(--text); letter-spacing: -.5px; }
-    .nav-logo .web    { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
-
+    .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
     .logo-box {
-      width: 34px; height: 34px;
-      background: var(--accent);
-      border-radius: 6px;
+      width: 34px; height: 34px; background: var(--accent); border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
     }
     .logo-box svg { width: 20px; height: 20px; fill: #0f1117; }
-
+    .nav-logo .bunker { font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: -.5px; }
+    .nav-logo .web    { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
     .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: .9rem;
-      font-weight: 500;
-      transition: color var(--transition);
-    }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .88rem; font-weight: 500; transition: color var(--t); }
     .nav-links a:hover { color: var(--text); }
-
     .nav-right { display: flex; align-items: center; gap: .75rem; }
-
     .btn-outline {
-      padding: .45rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: transparent;
-      color: var(--text);
-      font-size: .85rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background var(--transition), border-color var(--transition);
-      text-decoration: none;
+      padding: .42rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+      background: transparent; color: var(--text); font-size: .82rem; font-weight: 500;
+      cursor: pointer; transition: background var(--t); text-decoration: none; display: inline-flex; align-items: center; gap: .4rem;
     }
-    .btn-outline:hover { background: var(--surface2); border-color: var(--muted); }
-
-    .btn-accent {
-      padding: .45rem 1.1rem;
-      border: none;
-      border-radius: var(--radius);
-      background: var(--accent);
-      color: #0f1117;
-      font-size: .85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity var(--transition);
-      text-decoration: none;
+    .btn-outline:hover { background: var(--surface2); }
+    .btn-green {
+      padding: .42rem 1.1rem; border: none; border-radius: var(--radius);
+      background: var(--accent); color: #0f1117; font-size: .82rem; font-weight: 700;
+      cursor: pointer; transition: opacity var(--t); text-decoration: none;
     }
-    .btn-accent:hover { opacity: .85; }
+    .btn-green:hover { opacity: .85; }
 
-    /* ── Hero ───────────────────────────────────────────────── */
-    .hero {
-      text-align: center;
-      padding: 5rem 1rem 3rem;
+    /* ── Hero ── */
+    .hero { text-align: center; padding: 4.5rem 1rem 3rem; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--accent-bg); border: 1px solid var(--accent-dim);
+      color: var(--accent); font-size: .75rem; font-weight: 600;
+      padding: .28rem .8rem; border-radius: 99px; margin-bottom: 1.2rem;
     }
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      line-height: 1.18;
-      max-width: 700px;
-      margin: 0 auto .9rem;
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15;
+      max-width: 680px; margin: 0 auto .85rem;
     }
     .hero h1 span { color: var(--accent); }
-    .hero p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 520px;
-      margin: 0 auto;
-    }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 480px; margin: 0 auto 2.5rem; }
 
-    /* ── Layout ─────────────────────────────────────────────── */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem 4rem;
+    /* ── Segment tabs ── */
+    .segment {
+      display: inline-flex; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 2.5rem;
     }
+    .seg-btn {
+      padding: .55rem 1.5rem; border: none; border-radius: 7px;
+      background: transparent; color: var(--muted); font-size: .88rem; font-weight: 600;
+      cursor: pointer; transition: all var(--t);
+    }
+    .seg-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.4); }
 
-    .layout {
+    /* ── Container ── */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+    /* ── Section label ── */
+    .section-eyebrow {
+      text-align: center; font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: .6rem;
+    }
+    .section-title { text-align: center; font-size: 1.6rem; font-weight: 700; margin-bottom: .5rem; }
+    .section-sub { text-align: center; color: var(--muted); font-size: .92rem; margin-bottom: 2.5rem; }
+
+    /* ── PRO Features strip ── */
+    .pro-features {
       display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    /* ── Section heading ─────────────────────────────────────── */
-    .section-title {
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    /* ── Feature cards ───────────────────────────────────────── */
-    .features-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .feature-group {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .feature-group-header {
-      display: flex;
-      align-items: center;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: .75rem;
-      padding: .9rem 1.25rem;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      user-select: none;
+      margin-bottom: 3rem;
     }
-    .feature-group-header:hover { background: #2a2f47; }
-
-    .group-icon {
-      width: 32px; height: 32px;
-      border-radius: 7px;
+    .pro-feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.1rem;
+      display: flex; align-items: flex-start; gap: .75rem;
+      cursor: pointer; transition: border-color var(--t), background var(--t);
+      position: relative;
+    }
+    .pro-feature-card:hover { border-color: var(--muted); background: var(--surface2); }
+    .pro-feature-card.selected { border-color: var(--accent); background: var(--accent-bg); }
+    .pro-feature-card .pf-check {
+      width: 18px; height: 18px; border: 2px solid var(--border);
+      border-radius: 4px; flex-shrink: 0; margin-top: 1px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
+      transition: all var(--t); background: var(--surface);
+    }
+    .pro-feature-card.selected .pf-check { background: var(--accent); border-color: var(--accent); }
+    .pro-feature-card.selected .pf-check svg { display: block; }
+    .pf-check svg { display: none; width: 11px; height: 11px; }
+    .pf-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .pf-name { font-size: .85rem; font-weight: 600; }
+    .pf-desc { font-size: .75rem; color: var(--muted); margin-top: .15rem; line-height: 1.4; }
+    .pro-badge {
+      position: absolute; top: .6rem; right: .7rem;
+      font-size: .62rem; font-weight: 700; letter-spacing: .06em;
+      background: var(--gold-bg); color: var(--gold); border: 1px solid #78350f;
+      padding: .1rem .45rem; border-radius: 99px;
     }
 
-    .group-name { font-weight: 600; font-size: .95rem; flex: 1; }
-    .group-badge {
-      font-size: .72rem;
-      font-weight: 600;
-      padding: .2rem .55rem;
-      border-radius: 99px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--muted);
+    /* ── Plans grid ── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
     }
-    .group-badge.active { background: #14532d; border-color: var(--accent-dim); color: var(--accent); }
+    @media (max-width: 860px) { .plans-grid { grid-template-columns: 1fr; } }
 
-    .chevron {
-      width: 18px; height: 18px;
-      color: var(--muted);
-      transition: transform var(--transition);
-      flex-shrink: 0;
+    .plan-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem 1.5rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
+      transition: border-color var(--t), transform var(--t);
+      position: relative; cursor: pointer;
     }
-    .feature-group.open .chevron { transform: rotate(180deg); }
-
-    .feature-items { display: none; }
-    .feature-group.open .feature-items { display: block; }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: .85rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      transition: background var(--transition);
-    }
-    .feature-item:last-child { border-bottom: none; }
-    .feature-item:hover { background: #1e2236; }
-
-    .feature-check {
-      width: 20px; height: 20px;
-      border: 2px solid var(--border);
-      border-radius: 5px;
-      cursor: pointer;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: all var(--transition);
-      background: var(--surface);
-    }
-    .feature-check:hover { border-color: var(--accent); }
-    .feature-check.checked {
-      background: var(--accent);
+    .plan-card:hover { border-color: var(--muted); transform: translateY(-2px); }
+    .plan-card.selected { border-color: var(--accent); }
+    .plan-card.popular {
       border-color: var(--accent);
-    }
-    .feature-check.checked svg { display: block; }
-    .feature-check svg { display: none; width: 12px; height: 12px; fill: #0f1117; }
-
-    .feature-info { flex: 1; }
-    .feature-name { font-size: .9rem; font-weight: 500; }
-    .feature-desc { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
-
-    .feature-price {
-      font-size: .9rem;
-      font-weight: 600;
-      color: var(--accent);
-      white-space: nowrap;
-    }
-    .feature-price.free { color: var(--muted); }
-
-    /* ── Sticky sidebar ──────────────────────────────────────── */
-    .sidebar {
-      position: sticky;
-      top: 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      background: linear-gradient(160deg, var(--accent-bg) 0%, var(--surface) 60%);
     }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
+    .popular-tag {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #0f1117;
+      font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+      padding: .2rem .85rem; border-radius: 99px; white-space: nowrap;
     }
 
-    .price-display {
+    .plan-tier { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .plan-name { font-size: 1.5rem; font-weight: 800; }
+    .plan-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; margin-top: .2rem; }
+
+    .plan-price-row { display: flex; align-items: flex-end; gap: .3rem; }
+    .plan-price { font-size: 2.6rem; font-weight: 800; line-height: 1; }
+    .plan-price-suffix { font-size: .85rem; color: var(--muted); font-weight: 500; margin-bottom: .3rem; }
+    .plan-price-note { font-size: .78rem; color: var(--muted); }
+
+    .plan-cta {
+      width: 100%; padding: .75rem; border-radius: 8px;
+      font-size: .9rem; font-weight: 700; cursor: pointer;
+      transition: opacity var(--t), transform var(--t); border: none;
+    }
+    .plan-cta:hover { opacity: .85; transform: translateY(-1px); }
+    .plan-cta.solid { background: var(--accent); color: #0f1117; }
+    .plan-cta.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .plan-cta.ghost:hover { border-color: var(--muted); background: var(--surface2); }
+    .plan-cta.outline-green { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+
+    .plan-includes { font-size: .75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .plan-features li {
+      display: flex; align-items: flex-start; gap: .55rem;
+      font-size: .83rem; line-height: 1.45;
+    }
+    .plan-features li .chk { color: var(--accent); flex-shrink: 0; font-size: .85rem; margin-top: .05rem; }
+
+    /* ── Instance slider ── */
+    .instance-row {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .instance-row label { font-size: .85rem; font-weight: 600; white-space: nowrap; }
+    input[type=range] {
+      flex: 1; min-width: 140px; accent-color: var(--accent);
+      height: 6px; cursor: pointer;
+    }
+    .instance-count {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 7px; padding: .3rem .75rem;
+      font-size: .9rem; font-weight: 700; min-width: 56px; text-align: center;
+    }
+    .instance-note { font-size: .78rem; color: var(--muted); }
+
+    /* ── Support tiers ── */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: .85rem;
+      margin-bottom: 3rem;
+    }
+    .support-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem 1.2rem;
+      cursor: pointer; transition: border-color var(--t), background var(--t);
+      position: relative; display: flex; flex-direction: column; gap: .55rem;
+    }
+    .support-card:hover { border-color: var(--muted); background: var(--surface2); }
+    .support-card.selected { border-color: var(--accent); background: var(--accent-bg); }
+    .support-card-header { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+    .support-radio {
+      width: 17px; height: 17px; border-radius: 50%;
+      border: 2px solid var(--border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--t); background: var(--surface);
+    }
+    .support-card.selected .support-radio { border-color: var(--accent); background: var(--accent); }
+    .support-radio-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #0f1117;
+      opacity: 0; transition: opacity var(--t);
+    }
+    .support-card.selected .support-radio-dot { opacity: 1; }
+    .support-name { font-size: .88rem; font-weight: 700; flex: 1; }
+    .support-price-tag {
+      font-size: .78rem; font-weight: 700;
+      color: var(--accent); background: var(--accent-bg);
+      border: 1px solid var(--accent-dim); border-radius: 99px;
+      padding: .15rem .55rem; white-space: nowrap;
+    }
+    .support-price-tag.free { color: var(--muted); background: transparent; border-color: var(--border); }
+    .support-desc { font-size: .76rem; color: var(--muted); line-height: 1.45; }
+    .support-perks { list-style: none; display: flex; flex-direction: column; gap: .3rem; }
+    .support-perks li { font-size: .75rem; color: var(--muted); display: flex; align-items: flex-start; gap: .4rem; }
+    .support-perks li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+    .support-card.selected .support-perks li { color: var(--text); }
+
+    /* ── Cloud section ── */
+    .cloud-section { margin-top: 4rem; }
+    .cloud-divider {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem;
+    }
+    .cloud-divider hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+    .cloud-divider span {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    }
+
+    .cloud-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    }
+    @media (max-width: 700px) { .cloud-grid { grid-template-columns: 1fr; } }
+
+    /* ── Value section ── */
+    .value-section {
+      margin-top: 4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2.5rem;
       text-align: center;
-      padding: 1.5rem 1.25rem;
     }
-    .price-label { font-size: .75rem; color: var(--muted); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
-    .price-amount {
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.1;
-      margin: .3rem 0 .1rem;
+    .value-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: .5rem; }
+    .value-section h2 span { color: var(--accent); }
+    .value-section p { color: var(--muted); font-size: .9rem; max-width: 480px; margin: 0 auto 2rem; }
+    .value-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem; text-align: left;
     }
-    .price-amount span { font-size: 1.5rem; color: var(--muted); vertical-align: super; font-weight: 500; }
-    .price-period { font-size: .8rem; color: var(--muted); }
+    .value-item { background: var(--surface2); border-radius: 8px; padding: 1rem; }
+    .value-item .vi-icon { font-size: 1.4rem; margin-bottom: .4rem; }
+    .value-item .vi-title { font-size: .85rem; font-weight: 600; }
+    .value-item .vi-desc { font-size: .75rem; color: var(--muted); margin-top: .2rem; line-height: 1.4; }
 
-    .line-items { display: flex; flex-direction: column; gap: .55rem; margin-top: .5rem; }
-    .line-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: .82rem;
+    /* ── Summary bar (fixed bottom) ── */
+    .summary-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: .85rem 2rem; z-index: 99;
+      display: flex; align-items: center; justify-content: space-between;
+      transform: translateY(100%);
+      transition: transform .3s ease;
+      gap: 1rem; flex-wrap: wrap;
     }
-    .line-item .li-name { color: var(--muted); }
-    .line-item .li-price { font-weight: 500; }
-    .line-divider { border: none; border-top: 1px solid var(--border); margin: .6rem 0; }
-
-    .summary-total {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 600;
-      font-size: .9rem;
+    .summary-bar.visible { transform: translateY(0); }
+    .sb-left { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+    .sb-plan { font-size: .85rem; }
+    .sb-plan strong { color: var(--accent); }
+    .sb-price { font-size: 1.4rem; font-weight: 800; }
+    .sb-price span { font-size: .8rem; font-weight: 400; color: var(--muted); }
+    .sb-features { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .sb-chip {
+      font-size: .72rem; background: var(--accent-bg); color: var(--accent);
+      border: 1px solid var(--accent-dim); border-radius: 99px; padding: .15rem .55rem;
     }
-
-    .btn-generate {
-      width: 100%;
-      padding: .85rem;
-      border: none;
-      border-radius: var(--radius);
-      background: var(--accent);
-      color: #0f1117;
-      font-size: .95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity var(--transition), transform var(--transition);
-      margin-top: .5rem;
+    .btn-cta-bar {
+      padding: .65rem 1.6rem; border: none; border-radius: var(--radius);
+      background: var(--accent); color: #0f1117; font-size: .9rem; font-weight: 700;
+      cursor: pointer; transition: opacity var(--t); white-space: nowrap;
     }
-    .btn-generate:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-generate:active { transform: translateY(0); }
-    .btn-generate:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+    .btn-cta-bar:hover { opacity: .85; }
+    .btn-cta-bar:disabled { opacity: .35; cursor: not-allowed; }
 
-    .empty-state {
-      text-align: center;
-      color: var(--muted);
-      font-size: .83rem;
-      padding: .5rem 0;
-    }
-
-    /* ── API Key modal ───────────────────────────────────────── */
+    /* ── Modal ── */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease;
+      position: fixed; inset: 0; background: rgba(0,0,0,.75);
+      backdrop-filter: blur(5px); display: flex; align-items: center;
+      justify-content: center; z-index: 999;
+      opacity: 0; pointer-events: none; transition: opacity .2s ease;
     }
-    .modal-overlay.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
+    .modal-overlay.visible { opacity: 1; pointer-events: all; }
     .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      width: min(520px, 90vw);
-      padding: 2rem;
-      transform: translateY(20px);
-      transition: transform .25s ease;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; width: min(560px, 92vw); padding: 2.25rem;
+      transform: translateY(22px); transition: transform .25s ease;
     }
     .modal-overlay.visible .modal { transform: translateY(0); }
+    .modal-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .modal-header .logo-box { width: 44px; height: 44px; border-radius: 9px; flex-shrink: 0; }
+    .modal-header .logo-box svg { width: 26px; height: 26px; }
+    .modal-header h2 { font-size: 1.25rem; font-weight: 700; }
+    .modal-header p { font-size: .8rem; color: var(--muted); margin-top: .1rem; }
 
-    .modal-logo {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.25rem;
+    .modal-plan-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--accent-bg); border: 1px solid var(--accent-dim);
+      color: var(--accent); font-size: .78rem; font-weight: 600;
+      padding: .3rem .85rem; border-radius: 99px; margin-bottom: 1.25rem;
     }
-    .modal-logo .logo-box { width: 50px; height: 50px; border-radius: 10px; }
-    .modal-logo .logo-box svg { width: 28px; height: 28px; }
-
-    .modal h2 { font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: .4rem; }
-    .modal .modal-sub { text-align: center; color: var(--muted); font-size: .85rem; margin-bottom: 1.5rem; }
 
     .api-key-box {
-      display: flex;
-      align-items: center;
-      background: var(--bg);
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      padding: .75rem 1rem;
-      gap: .75rem;
-      margin-bottom: 1.25rem;
+      display: flex; align-items: center;
+      background: var(--bg); border: 1px solid var(--accent);
+      border-radius: 9px; padding: .8rem 1rem; gap: .75rem; margin-bottom: 1.25rem;
     }
     .api-key-text {
-      flex: 1;
-      font-family: 'Courier New', monospace;
-      font-size: .82rem;
-      color: var(--accent);
-      word-break: break-all;
+      flex: 1; font-family: 'Courier New', monospace; font-size: .82rem;
+      color: var(--accent); word-break: break-all;
     }
     .copy-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: .4rem .7rem;
-      color: var(--text);
-      font-size: .75rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background var(--transition);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; padding: .38rem .7rem; color: var(--text);
+      font-size: .75rem; cursor: pointer; white-space: nowrap; transition: background var(--t);
     }
     .copy-btn:hover { background: var(--border); }
     .copy-btn.copied { color: var(--accent); border-color: var(--accent-dim); }
 
-    .selected-features-list {
-      background: var(--surface2);
-      border-radius: 8px;
-      padding: .85rem 1rem;
+    .modal-summary {
+      background: var(--surface2); border-radius: 9px;
+      padding: .9rem 1.1rem; margin-bottom: 1.25rem;
+    }
+    .modal-summary-title {
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: .65rem;
+    }
+    .ms-row { display: flex; justify-content: space-between; font-size: .83rem; margin-bottom: .35rem; }
+    .ms-row:last-child { margin-bottom: 0; font-weight: 600; padding-top: .4rem; border-top: 1px solid var(--border); margin-top: .25rem; }
+    .ms-row span:first-child { color: var(--muted); }
+    .chips-row { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .6rem; }
+    .m-chip {
+      font-size: .75rem; background: var(--accent-bg); color: var(--accent);
+      border: 1px solid var(--accent-dim); border-radius: 99px;
+      padding: .18rem .6rem; display: inline-flex; align-items: center; gap: .25rem;
+    }
+    .trial-note {
+      text-align: center; font-size: .78rem; color: var(--muted);
       margin-bottom: 1.25rem;
     }
-    .selected-features-list p {
-      font-size: .78rem;
-      color: var(--muted);
-      margin-bottom: .6rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-    .sel-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-      font-size: .78rem;
-      background: #14532d;
-      color: var(--accent);
-      border: 1px solid var(--accent-dim);
-      border-radius: 99px;
-      padding: .18rem .6rem;
-      margin: .2rem .2rem 0 0;
-    }
-
+    .trial-note strong { color: var(--accent); }
     .modal-footer { display: flex; gap: .75rem; }
-    .modal-footer button { flex: 1; }
+    .modal-footer button { flex: 1; padding: .7rem; border-radius: 8px; font-size: .88rem; font-weight: 600; cursor: pointer; border: none; }
+    .modal-footer .mf-close { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .modal-footer .mf-regen { background: var(--accent); color: #0f1117; }
+    .modal-footer button:hover { opacity: .85; }
 
-    /* ── Toggle switch ───────────────────────────────────────── */
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: .4rem;
-    }
-    .toggle {
-      width: 38px; height: 22px;
-      background: var(--border);
-      border-radius: 99px;
-      position: relative;
-      cursor: pointer;
-      transition: background var(--transition);
-      flex-shrink: 0;
-    }
-    .toggle.on { background: var(--accent); }
-    .toggle::after {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      border-radius: 50%;
-      background: #fff;
-      top: 3px; left: 3px;
-      transition: left var(--transition);
-    }
-    .toggle.on::after { left: 19px; }
-
-    /* ── Footer ─────────────────────────────────────────────── */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: .8rem;
+      border-top: 1px solid var(--border); padding: 1.5rem;
+      text-align: center; color: var(--muted); font-size: .78rem;
+      margin-bottom: 80px;
     }
+    footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
 
-<!-- ── Navigation ──────────────────────────────────────────── -->
+<!-- Nav -->
 <nav>
   <a href="#" class="nav-logo">
     <div class="logo-box">
@@ -481,339 +416,597 @@
     <a href="https://discord.com/invite/fTf46FmtyD" target="_blank">Discord</a>
   </div>
   <div class="nav-right">
-    <a href="https://github.com/bunkerity/bunkerweb" target="_blank" class="btn-outline">⭐ Stars 10,123</a>
-    <a href="https://panel.bunkerweb.io" target="_blank" class="btn-accent">Upgrade to PRO</a>
+    <a href="https://github.com/bunkerity/bunkerweb" target="_blank" class="btn-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.7.115 2.5.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.38.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+      Stars 10,123
+    </a>
+    <a href="https://panel.bunkerweb.io" target="_blank" class="btn-green">Upgrade to PRO</a>
   </div>
 </nav>
 
-<!-- ── Hero ────────────────────────────────────────────────── -->
+<!-- Hero -->
 <div class="hero">
-  <h1>Build your <span>BunkerWeb</span><br/>security stack</h1>
-  <p>Pick the features you need, see live pricing, and get your API key in seconds.</p>
-</div>
+  <div class="hero-badge">💎 Open-source · Self-hosted · PRO</div>
+  <h1>Simple, transparent<br/><span>BunkerWeb</span> pricing</h1>
+  <p>Choose the plan that fits your scale. Start free, upgrade when you're ready.</p>
 
-<!-- ── Main layout ─────────────────────────────────────────── -->
-<div class="container">
-  <div class="layout">
-
-    <!-- Left: feature groups -->
-    <div>
-      <p class="section-title">Available features</p>
-
-      <div class="features-grid" id="featuresGrid">
-        <!-- Injected by JS -->
-      </div>
-    </div>
-
-    <!-- Right: pricing sidebar -->
-    <div class="sidebar">
-
-      <div class="toggle-row card" style="padding:.85rem 1.25rem;">
-        <span>Billing: <strong id="billingLabel">Monthly</strong></span>
-        <div class="toggle" id="billingToggle"></div>
-      </div>
-
-      <div class="card price-display">
-        <div class="price-label">Total per month</div>
-        <div class="price-amount"><span>$</span><span id="totalPrice">0</span></div>
-        <div class="price-period" id="pricePeriod">$0 / year (billed monthly)</div>
-      </div>
-
-      <div class="card">
-        <p class="section-title">Selected features</p>
-        <div class="line-items" id="lineItems">
-          <p class="empty-state">No features selected yet.</p>
-        </div>
-        <hr class="line-divider" />
-        <div class="summary-total">
-          <span>Total</span>
-          <span id="summaryTotal">$0 / mo</span>
-        </div>
-        <button class="btn-generate" id="generateBtn" disabled>
-          Generate API Key →
-        </button>
-      </div>
-
-    </div>
+  <!-- Segment -->
+  <div class="segment">
+    <button class="seg-btn active" onclick="switchTab('selfhosted', this)">🖥️ Self-Hosted</button>
+    <button class="seg-btn" onclick="switchTab('cloud', this)">☁️ Cloud</button>
   </div>
 </div>
 
-<!-- ── API Key Modal ───────────────────────────────────────── -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-logo">
-      <div class="logo-box">
-        <svg viewBox="0 0 24 24" style="fill:#0f1117"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.32 5 15.5v-7l7-4.32z"/></svg>
+<!-- ── MAIN CONTAINER ── -->
+<div class="container">
+
+  <!-- ══ SELF-HOSTED TAB ══ -->
+  <div id="tab-selfhosted">
+
+    <!-- PRO Features picker -->
+    <p class="section-eyebrow">PRO Add-ons</p>
+    <h2 class="section-title">Choose your PRO features</h2>
+    <p class="section-sub">All PRO features are included in every paid plan. Select the ones you care about most to see how they map to your plan.</p>
+
+    <div class="pro-features" id="proFeaturesGrid"></div>
+
+    <!-- Instance slider -->
+    <div class="instance-row">
+      <label>Instances</label>
+      <input type="range" id="instanceRange" min="1" max="20" value="1" oninput="updateInstances(this.value)" />
+      <div class="instance-count" id="instanceDisplay">1</div>
+      <span class="instance-note">Price scales with additional instances</span>
+    </div>
+
+    <!-- Support tiers -->
+    <p class="section-eyebrow" style="margin-top:.5rem;">Support Add-on</p>
+    <h2 class="section-title">Add support to your plan</h2>
+    <p class="section-sub">Pick a support level — it adds to your monthly total.</p>
+    <div class="support-grid" id="supportGrid"></div>
+
+    <!-- Plans -->
+    <p class="section-eyebrow" style="margin-top:.5rem;">Self-Hosted Plans</p>
+    <h2 class="section-title">Pick your plan</h2>
+    <p class="section-sub">30-day free trial on Shield and Fortress. No credit card required to start.</p>
+
+    <div class="plans-grid" id="selfhostedPlans"></div>
+  </div>
+
+  <!-- ══ CLOUD TAB ══ -->
+  <div id="tab-cloud" style="display:none;">
+
+    <p class="section-eyebrow">BunkerWeb Cloud</p>
+    <h2 class="section-title">Fully managed security</h2>
+    <p class="section-sub">Open-source power, managed by our experts. Zero ops overhead.</p>
+
+    <div class="cloud-grid" id="cloudPlans"></div>
+
+    <!-- Value props -->
+    <div class="value-section">
+      <h2>Open Source Power,<br/><span>Managed for You</span></h2>
+      <p>BunkerWeb CLOUD gives you the flexibility and transparency of open source security, with the convenience of a fully-operated SaaS solution.</p>
+      <div class="value-grid">
+        <div class="value-item">
+          <div class="vi-icon">🛡️</div>
+          <div class="vi-title">All PRO features unlocked</div>
+          <div class="vi-desc">Anti-DDoS, monitoring, reporting, and every PRO plugin included.</div>
+        </div>
+        <div class="value-item">
+          <div class="vi-icon">📊</div>
+          <div class="vi-title">Monitoring platform</div>
+          <div class="vi-desc">Access to our real-time monitoring dashboard and alerting.</div>
+        </div>
+        <div class="value-item">
+          <div class="vi-icon">🤝</div>
+          <div class="vi-title">Maintainer support</div>
+          <div class="vi-desc">Direct technical support from the BunkerWeb core team.</div>
+        </div>
+        <div class="value-item">
+          <div class="vi-icon">⚡</div>
+          <div class="vi-title">Zero configuration</div>
+          <div class="vi-desc">Fully provisioned and managed — go live in minutes, not days.</div>
+        </div>
       </div>
     </div>
-    <h2>Your API Key is ready</h2>
-    <p class="modal-sub">Keep this key safe — it grants access to your selected BunkerWeb features.</p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Summary bar -->
+<div class="summary-bar" id="summaryBar">
+  <div class="sb-left">
+    <div>
+      <div class="sb-plan">Plan: <strong id="sb-plan-name">—</strong></div>
+      <div class="sb-price" id="sb-price-val">—</div>
+    </div>
+    <div class="sb-features" id="sb-chips"></div>
+  </div>
+  <button class="btn-cta-bar" id="mainCta" onclick="openModal()" disabled>Get API Key →</button>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24" fill="#0f1117"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.32 5 15.5v-7l7-4.32z"/></svg>
+      </div>
+      <div>
+        <h2>Your API Key is ready 🎉</h2>
+        <p>Store this key securely — it activates your BunkerWeb plan.</p>
+      </div>
+    </div>
+
+    <div class="modal-plan-badge" id="modalPlanBadge">💎 Shield Protection</div>
 
     <div class="api-key-box">
       <span class="api-key-text" id="apiKeyText"></span>
       <button class="copy-btn" id="copyBtn" onclick="copyKey()">Copy</button>
     </div>
 
-    <div class="selected-features-list">
-      <p>Included features</p>
-      <div id="modalFeatureChips"></div>
+    <div class="modal-summary">
+      <div class="modal-summary-title">Order summary</div>
+      <div class="ms-row"><span>Plan</span><span id="ms-plan">—</span></div>
+      <div class="ms-row"><span>Instances</span><span id="ms-instances">1</span></div>
+      <div class="ms-row"><span>PRO features</span><span id="ms-features">All included</span></div>
+      <div class="ms-row"><span>Support tier</span><span id="ms-support">—</span></div>
+      <div class="ms-row"><span>Selected add-ons</span><div class="chips-row" id="ms-chips"></div></div>
+      <div class="ms-row"><span>Total / month</span><span id="ms-total">—</span></div>
+    </div>
+
+    <div class="trial-note">
+      🎁 Your <strong>30-day free trial</strong> starts today. Cancel anytime.
     </div>
 
     <div class="modal-footer">
-      <button class="btn-outline" onclick="closeModal()">Close</button>
-      <button class="btn-accent" onclick="regenKey()">Regenerate key</button>
+      <button class="mf-close" onclick="closeModal()">Close</button>
+      <button class="mf-regen" onclick="regenKey()">Regenerate key</button>
     </div>
   </div>
 </div>
 
 <footer>
-  Built with the BunkerWeb open-source spirit · <a href="https://github.com/bunkerity/bunkerweb" target="_blank" style="color:var(--accent);text-decoration:none;">github.com/bunkerity/bunkerweb</a>
+  Built with the BunkerWeb open-source spirit ·
+  <a href="https://github.com/bunkerity/bunkerweb" target="_blank">github.com/bunkerity/bunkerweb</a>
 </footer>
 
 <script>
-// ── Feature data ────────────────────────────────────────────
-const GROUPS = [
-  {
-    id: 'core',
-    name: 'Core Protection',
-    icon: '🛡️',
-    color: '#4ade80',
-    bg: '#14532d',
-    features: [
-      { id: 'waf',        name: 'Web Application Firewall (WAF)',      desc: 'ModSecurity-based WAF with OWASP CRS ruleset',              price: 0    },
-      { id: 'ratelimit',  name: 'Rate Limiting',                       desc: 'Protect endpoints from brute-force and abuse',              price: 5    },
-      { id: 'antibot',    name: 'Anti-Bot Challenge',                  desc: 'JS challenge, captcha, and browser fingerprinting',         price: 9    },
-      { id: 'blacklist',  name: 'IP / DNSBL Blacklisting',             desc: 'Block known malicious IPs via threat intelligence feeds',   price: 7    },
-    ]
-  },
-  {
-    id: 'auth',
-    name: 'Authentication & Access',
-    icon: '🔐',
-    color: '#60a5fa',
-    bg: '#1e3a5f',
-    features: [
-      { id: 'basicauth',  name: 'HTTP Basic Auth',                     desc: 'Password-protect any route or service',                    price: 0    },
-      { id: 'authreq',    name: 'Auth Request (SSO)',                   desc: 'Delegate auth to an external identity provider',           price: 12   },
-      { id: 'mfa',        name: 'Multi-Factor Authentication',         desc: 'TOTP / passkey second factor enforcement',                  price: 15   },
-    ]
-  },
-  {
-    id: 'tls',
-    name: 'TLS & Certificates',
-    icon: '🔒',
-    color: '#f59e0b',
-    bg: '#451a03',
-    features: [
-      { id: 'letsencrypt',name: "Let's Encrypt Auto-Renewal",          desc: 'Automatic ACME certificate issuance and renewal',           price: 0    },
-      { id: 'customcert', name: 'Custom Certificate Upload',           desc: 'Bring your own wildcard or EV certificate',                price: 4    },
-      { id: 'hsts',       name: 'HSTS + HSTS Preload',                 desc: 'Enforce strict transport security headers',                 price: 0    },
-      { id: 'mtls',       name: 'Mutual TLS (mTLS)',                   desc: 'Client certificate authentication for zero-trust access',  price: 10   },
-    ]
-  },
-  {
-    id: 'cache',
-    name: 'Caching & Performance',
-    icon: '⚡',
-    color: '#a78bfa',
-    bg: '#2e1065',
-    features: [
-      { id: 'redis',      name: 'Redis Cluster Integration',           desc: 'Shared session & cache store with sentinel support',        price: 8    },
-      { id: 'staticcache',name: 'Static Asset Caching',                desc: 'Edge caching for images, CSS, JS with cache-control',       price: 5    },
-      { id: 'gzip',       name: 'Gzip / Brotli Compression',           desc: 'Automatic response compression to reduce bandwidth',        price: 0    },
-    ]
-  },
-  {
-    id: 'monitoring',
-    name: 'Monitoring & Reporting',
-    icon: '📊',
-    color: '#f472b6',
-    bg: '#500724',
-    features: [
-      { id: 'logs',       name: 'Structured JSON Logs',                desc: 'Machine-readable access and security event logs',           price: 0    },
-      { id: 'reports',    name: 'Security Reports Dashboard',          desc: 'Visual dashboard with threat and traffic analytics',        price: 14   },
-      { id: 'alerting',   name: 'Real-Time Alerting (Slack / email)',  desc: 'Instant notifications on attacks and anomalies',            price: 11   },
-      { id: 'siem',       name: 'SIEM Export (Splunk / Elastic)',      desc: 'Forward events to your SIEM pipeline via syslog or HTTP',  price: 18   },
-    ]
-  },
-  {
-    id: 'advanced',
-    name: 'Advanced Features',
-    icon: '🚀',
-    color: '#34d399',
-    bg: '#064e3b',
-    features: [
-      { id: 'crowdsec',   name: 'CrowdSec Integration',                desc: 'Collaborative threat intelligence & behavioral analysis',   price: 10   },
-      { id: 'bans',       name: 'Automatic IP Banning',                desc: 'Temporary and permanent bans with allow-list support',      price: 0    },
-      { id: 'geoblocking',name: 'Geo-Blocking',                        desc: 'Allow or deny traffic by country code',                    price: 6    },
-      { id: 'grpc',       name: 'gRPC Proxying',                       desc: 'Reverse-proxy gRPC services with HTTP/2',                  price: 8    },
-      { id: 'plugins',    name: 'Custom Plugin Support',               desc: 'Extend BunkerWeb with your own Lua or Python plugins',     price: 20   },
-    ]
-  }
+// ══ Data ══════════════════════════════════════════════════════
+const PRO_FEATURES = [
+  { id: 'antiddos',  icon: '🌊', name: 'Anti-DDoS',           desc: 'Advanced protection against DDoS attacks' },
+  { id: 'backups3',  icon: '☁️', name: 'Backup S3',            desc: 'Remote backup to Amazon S3' },
+  { id: 'migration', icon: '🔄', name: 'Migration',            desc: 'Easily migrate the database between environments' },
+  { id: 'monitoring',icon: '📊', name: 'Monitoring',           desc: 'Monitor service status and performance' },
+  { id: 'prometheus',icon: '📈', name: 'Prometheus Exporter',  desc: 'Exposes metrics for Prometheus / Grafana' },
+  { id: 'reporting', icon: '📋', name: 'Reporting',            desc: 'Weekly or monthly usage and threat reports' },
+  { id: 'usermgr',   icon: '👥', name: 'User Manager',         desc: 'Manage users and their access rights' },
 ];
 
-// ── State ────────────────────────────────────────────────────
-const selected = new Set();
-let annual = false;
+const SELF_PLANS = [
+  {
+    id: 'shield',
+    tier: 'Standard',
+    name: 'Shield',
+    emoji: '🛡️',
+    desc: 'Perfect for SMBs, tech startups, and growing IT projects.',
+    basePrice: 49,
+    extraPerInstance: 15,
+    cta: 'Shield Protection',
+    ctaStyle: 'outline-green',
+    trial: true,
+    popular: false,
+    features: [
+      'Full access to all PRO features',
+      'Self-hosted secure version',
+      'Easy upgrade from Open-Source',
+      'Active community support',
+      'Ideal for quick and secure deployment',
+    ]
+  },
+  {
+    id: 'fortress',
+    tier: 'Enterprise',
+    name: 'Fortress',
+    emoji: '🏰',
+    desc: 'Designed for multi-site organizations, scale-ups, and sensitive industries (healthcare, finance, education).',
+    basePrice: 149,
+    extraPerInstance: 39,
+    cta: 'Fortress Protection',
+    ctaStyle: 'solid',
+    trial: true,
+    popular: true,
+    features: [
+      'Full access to all PRO features',
+      'Self-hosted ready for critical environments',
+      'Easy upgrade from Open-Source',
+      'Priority support from core maintainers',
+      'High security and reliability requirements',
+    ]
+  },
+  {
+    id: 'sentinel',
+    tier: 'Custom',
+    name: 'Sentinel',
+    emoji: '🔭',
+    desc: 'Do you have specific needs? Let\'s find a tailored solution for your unique requirements.',
+    basePrice: null,
+    extraPerInstance: 0,
+    cta: "Let's discuss",
+    ctaStyle: 'ghost',
+    trial: false,
+    popular: false,
+    features: [
+      'Access to 100+ customizable services',
+      'Tailored development & integrations',
+      'Strategic support & cybersecurity consulting',
+      'Dedicated support with custom SLAs',
+      'A fully tailored solution for your business',
+    ]
+  },
+];
 
-// ── Render feature groups ────────────────────────────────────
-function render() {
-  const grid = document.getElementById('featuresGrid');
-  grid.innerHTML = '';
+const CLOUD_PLANS = [
+  {
+    id: 'cloud-essential',
+    tier: 'BunkerWeb Cloud',
+    name: 'The Essential',
+    emoji: '☁️',
+    desc: 'Fully managed BunkerWeb operated by our experts. Start fast, scale with confidence.',
+    priceLabel: 'Starting from',
+    price: 639,
+    priceSuffix: '€/monthly',
+    cta: 'Purchase Order',
+    ctaStyle: 'solid',
+    features: [
+      'Fully managed BunkerWeb (SaaS)',
+      'Unlock all PRO features',
+      'Access to our monitoring platform',
+      'Technical support from maintainers',
+    ]
+  },
+  {
+    id: 'cloud-custom',
+    tier: 'Custom',
+    name: 'Need More?',
+    emoji: '🔧',
+    desc: 'Tell us about your project — we\'ll come back to you shortly with a tailored proposal.',
+    priceLabel: 'Get a quote',
+    price: null,
+    priceSuffix: 'based on your needs',
+    cta: "Let's discuss",
+    ctaStyle: 'ghost',
+    features: [
+      'More than 50 services',
+      'Custom resources & provider',
+      'Custom SLA for technical support',
+      'Custom development & consulting',
+    ]
+  },
+];
 
-  GROUPS.forEach(group => {
-    const activeCount = group.features.filter(f => selected.has(f.id)).length;
-    const isOpen = activeCount > 0;
+const SUPPORT_TIERS = [
+  {
+    id: 'community',
+    name: 'Community',
+    icon: '💬',
+    price: 0,
+    desc: 'Best-effort community support via Discord and GitHub.',
+    perks: ['Discord community access', 'GitHub issue tracker', 'Public documentation'],
+  },
+  {
+    id: 'standard',
+    name: 'Standard',
+    icon: '📧',
+    price: 29,
+    desc: 'Email support with guaranteed response times for production issues.',
+    perks: ['Email ticketing system', '48h response time (business days)', 'Knowledge base access'],
+  },
+  {
+    id: 'priority',
+    name: 'Priority',
+    icon: '⚡',
+    price: 79,
+    desc: 'Fast-track support from the core maintainers team.',
+    perks: ['Priority ticket queue', '12h response time', 'Core maintainer access', 'Video call (monthly)'],
+  },
+  {
+    id: 'dedicated',
+    name: 'Dedicated',
+    icon: '🏆',
+    price: 199,
+    desc: 'A dedicated engineer and custom SLA for business-critical environments.',
+    perks: ['Dedicated Slack channel', '4h SLA guaranteed', 'Custom SLA agreement', 'Unlimited video calls', 'Proactive security advisories'],
+  },
+];
 
-    const el = document.createElement('div');
-    el.className = 'feature-group' + (isOpen ? ' open' : '');
-    el.innerHTML = `
-      <div class="feature-group-header" onclick="toggleGroup(this)">
-        <div class="group-icon" style="background:${group.bg}; color:${group.color}; font-size:.95rem;">${group.icon}</div>
-        <span class="group-name">${group.name}</span>
-        <span class="group-badge ${activeCount ? 'active' : ''}">${activeCount}/${group.features.length}</span>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+// ══ State ══════════════════════════════════════════════════════
+let selectedPlan = null;
+let selectedSupport = 'community';
+let instances = 1;
+const selectedFeatures = new Set();
+let activeTab = 'selfhosted';
+
+// ══ Render support tiers ═══════════════════════════════════════
+function renderSupportTiers() {
+  const grid = document.getElementById('supportGrid');
+  grid.innerHTML = SUPPORT_TIERS.map(s => `
+    <div class="support-card ${selectedSupport === s.id ? 'selected' : ''}"
+         onclick="selectSupport('${s.id}')">
+      <div class="support-card-header">
+        <div class="support-radio"><div class="support-radio-dot"></div></div>
+        <span class="support-name">${s.icon} ${s.name}</span>
+        <span class="support-price-tag ${s.price === 0 ? 'free' : ''}">${s.price === 0 ? 'Free' : '+' + s.price + '€/mo'}</span>
       </div>
-      <div class="feature-items">
-        ${group.features.map(f => `
-          <div class="feature-item" onclick="toggleFeature('${f.id}', event)">
-            <div class="feature-check ${selected.has(f.id) ? 'checked' : ''}" id="check-${f.id}">
-              <svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#0f1117" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <div class="support-desc">${s.desc}</div>
+      <ul class="support-perks">
+        ${s.perks.map(p => `<li>${p}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+function selectSupport(id) {
+  selectedSupport = id;
+  renderSupportTiers();
+  updateSummaryBar();
+}
+
+// ══ Render PRO features ════════════════════════════════════════
+function renderProFeatures() {
+  const grid = document.getElementById('proFeaturesGrid');
+  grid.innerHTML = PRO_FEATURES.map(f => `
+    <div class="pro-feature-card ${selectedFeatures.has(f.id) ? 'selected' : ''}"
+         onclick="toggleFeature('${f.id}')">
+      <div class="pf-check">
+        <svg viewBox="0 0 12 12" fill="none" stroke="#0f1117" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 6l3 3 5-5"/>
+        </svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.15rem;">
+          <span class="pf-icon">${f.icon}</span>
+          <span class="pf-name">${f.name}</span>
+        </div>
+        <div class="pf-desc">${f.desc}</div>
+      </div>
+      <div class="pro-badge">PRO</div>
+    </div>
+  `).join('');
+}
+
+function toggleFeature(id) {
+  if (selectedFeatures.has(id)) selectedFeatures.delete(id);
+  else selectedFeatures.add(id);
+  renderProFeatures();
+  updateSummaryBar();
+}
+
+// ══ Render self-hosted plans ════════════════════════════════════
+function renderSelfhostedPlans() {
+  const grid = document.getElementById('selfhostedPlans');
+  grid.innerHTML = SELF_PLANS.map(p => {
+    const price = calcPlanPrice(p);
+    return `
+      <div class="plan-card ${p.popular ? 'popular' : ''} ${selectedPlan === p.id ? 'selected' : ''}"
+           onclick="selectPlan('${p.id}')">
+        ${p.popular ? '<div class="popular-tag">⭐ Most Popular</div>' : ''}
+        <div>
+          <div class="plan-tier">${p.tier}</div>
+          <div class="plan-name">${p.emoji} ${p.name}</div>
+          <div class="plan-desc">${p.desc}</div>
+        </div>
+        <div>
+          ${price !== null ? `
+            <div class="plan-price-row">
+              <div class="plan-price">${price}€</div>
+              <div class="plan-price-suffix">/month</div>
             </div>
-            <div class="feature-info">
-              <div class="feature-name">${f.name}</div>
-              <div class="feature-desc">${f.desc}</div>
+            ${instances > 1 && p.extraPerInstance ? `<div class="plan-price-note">${p.basePrice}€ base + ${(instances-1)*p.extraPerInstance}€ for ${instances-1} extra instance${instances-1>1?'s':''}</div>` : ''}
+            ${p.trial ? '<div class="plan-price-note" style="color:var(--accent);margin-top:.3rem;">✓ 30-day free trial</div>' : ''}
+          ` : `
+            <div class="plan-price-row">
+              <div class="plan-price" style="font-size:1.5rem;color:var(--muted);">Get a quote</div>
             </div>
-            <div class="feature-price ${f.price === 0 ? 'free' : ''}">${f.price === 0 ? 'Free' : '$' + f.price + '/mo'}</div>
-          </div>
-        `).join('')}
+            <div class="plan-price-note">Based on your specific needs</div>
+          `}
+        </div>
+        <button class="plan-cta ${p.ctaStyle}" onclick="selectPlan('${p.id}'); event.stopPropagation();">
+          ${p.cta}
+        </button>
+        <div>
+          <div class="plan-includes" style="margin-bottom:.6rem;">Includes:</div>
+          <ul class="plan-features">
+            ${p.features.map(f => `<li><span class="chk">✓</span>${f}</li>`).join('')}
+          </ul>
+        </div>
       </div>
     `;
-    grid.appendChild(el);
+  }).join('');
+}
+
+function calcPlanPrice(p) {
+  if (p.basePrice === null) return null;
+  const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
+  return p.basePrice + (instances - 1) * (p.extraPerInstance || 0) + (support ? support.price : 0);
+}
+
+function selectPlan(id) {
+  if (id === 'sentinel' || id === 'cloud-custom') {
+    // Quote plans: open contact instead
+    selectedPlan = id;
+    renderSelfhostedPlans();
+    renderCloudPlans();
+    updateSummaryBar();
+    return;
+  }
+  selectedPlan = id;
+  renderSelfhostedPlans();
+  renderCloudPlans();
+  updateSummaryBar();
+}
+
+// ══ Instances ══════════════════════════════════════════════════
+function updateInstances(val) {
+  instances = parseInt(val);
+  document.getElementById('instanceDisplay').textContent = instances;
+  renderSelfhostedPlans();
+  updateSummaryBar();
+}
+
+// ══ Cloud plans ════════════════════════════════════════════════
+function renderCloudPlans() {
+  const grid = document.getElementById('cloudPlans');
+  grid.innerHTML = CLOUD_PLANS.map(p => `
+    <div class="plan-card ${selectedPlan === p.id ? 'selected' : ''}"
+         onclick="selectPlan('${p.id}')">
+      <div>
+        <div class="plan-tier">${p.tier}</div>
+        <div class="plan-name">${p.emoji} ${p.name}</div>
+        <div class="plan-desc">${p.desc}</div>
+      </div>
+      <div>
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.2rem;">${p.priceLabel}</div>
+        ${p.price ? `
+          <div class="plan-price-row">
+            <div class="plan-price">${p.price}€</div>
+            <div class="plan-price-suffix">/${p.priceSuffix.replace('€/monthly','month')}</div>
+          </div>
+        ` : `
+          <div class="plan-price-row">
+            <div class="plan-price" style="font-size:1.4rem;color:var(--muted);">${p.priceSuffix}</div>
+          </div>
+        `}
+      </div>
+      <button class="plan-cta ${p.ctaStyle}" onclick="selectPlan('${p.id}'); event.stopPropagation();">
+        ${p.cta}
+      </button>
+      <div>
+        <div class="plan-includes" style="margin-bottom:.6rem;">Includes:</div>
+        <ul class="plan-features">
+          ${p.features.map(f => `<li><span class="chk">✓</span>${f}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ Summary bar ════════════════════════════════════════════════
+function updateSummaryBar() {
+  const bar = document.getElementById('summaryBar');
+  const cta = document.getElementById('mainCta');
+
+  if (!selectedPlan) {
+    bar.classList.remove('visible');
+    cta.disabled = true;
+    return;
+  }
+
+  bar.classList.add('visible');
+
+  const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
+  const plan = allPlans.find(p => p.id === selectedPlan);
+  const price = plan ? calcPlanPrice(plan) : null;
+
+  document.getElementById('sb-plan-name').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
+  document.getElementById('sb-price-val').innerHTML = price !== null
+    ? `${price}€ <span>/ month${instances > 1 ? ' · ' + instances + ' instances' : ''}</span>`
+    : '<span style="font-size:.9rem;font-weight:500;">Quote based on needs</span>';
+
+  const chipsEl = document.getElementById('sb-chips');
+  const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
+  const supportChip = support
+    ? `<span class="sb-chip">${support.icon} ${support.name} Support${support.price > 0 ? ' +' + support.price + '€' : ''}</span>`
+    : '';
+  const featureChips = Array.from(selectedFeatures).map(id => {
+    const f = PRO_FEATURES.find(x => x.id === id);
+    return f ? `<span class="sb-chip">${f.icon} ${f.name}</span>` : '';
   });
+  chipsEl.innerHTML = supportChip + featureChips.join('') || '<span style="font-size:.75rem;color:var(--muted);">All PRO features included</span>';
 
-  updateSidebar();
-}
-
-function toggleGroup(header) {
-  header.parentElement.classList.toggle('open');
-}
-
-function toggleFeature(id, e) {
-  if (e.target.closest('.feature-check')) {
-    // clicked directly on checkbox — handle below
-  }
-  if (selected.has(id)) {
-    selected.delete(id);
+  // Quote plans → no API key, link to contact instead
+  if (selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') {
+    cta.textContent = "Let's discuss →";
+    cta.disabled = false;
+    cta.onclick = () => window.open('https://panel.bunkerweb.io', '_blank');
   } else {
-    selected.add(id);
+    cta.textContent = 'Get API Key →';
+    cta.disabled = false;
+    cta.onclick = openModal;
   }
-  render();
 }
 
-// ── Sidebar update ───────────────────────────────────────────
-function calcTotal() {
-  let total = 0;
-  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) total += f.price; }));
-  if (annual) total = Math.round(total * 12 * 0.8); // 20% annual discount
-  return total;
+// ══ Tab switching ══════════════════════════════════════════════
+function switchTab(tab, btn) {
+  activeTab = tab;
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-selfhosted').style.display = tab === 'selfhosted' ? '' : 'none';
+  document.getElementById('tab-cloud').style.display = tab === 'cloud' ? '' : 'none';
+  selectedPlan = null;
+  updateSummaryBar();
 }
 
-function updateSidebar() {
-  const total = calcTotal();
-  const monthly = calcMonthlyTotal();
-
-  document.getElementById('totalPrice').textContent = annual ? (total / 12).toFixed(0) : total;
-  document.getElementById('pricePeriod').textContent = annual
-    ? `$${total} / year (2 months free)`
-    : `$${total * 12} / year (billed monthly)`;
-  document.getElementById('billingLabel').textContent = annual ? 'Annual' : 'Monthly';
-  document.getElementById('summaryTotal').textContent = annual ? `$${(total/12).toFixed(0)} / mo` : `$${monthly} / mo`;
-
-  // Line items
-  const li = document.getElementById('lineItems');
-  const items = [];
-  GROUPS.forEach(g => g.features.forEach(f => {
-    if (selected.has(f.id)) items.push(f);
-  }));
-
-  if (items.length === 0) {
-    li.innerHTML = '<p class="empty-state">No features selected yet.</p>';
-  } else {
-    li.innerHTML = items.map(f =>
-      `<div class="line-item">
-        <span class="li-name">${f.name}</span>
-        <span class="li-price">${f.price === 0 ? 'Free' : '$' + f.price}</span>
-      </div>`
-    ).join('');
-  }
-
-  document.getElementById('generateBtn').disabled = items.length === 0;
-}
-
-function calcMonthlyTotal() {
-  let total = 0;
-  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) total += f.price; }));
-  return total;
-}
-
-// ── Billing toggle ───────────────────────────────────────────
-document.getElementById('billingToggle').addEventListener('click', function() {
-  annual = !annual;
-  this.classList.toggle('on', annual);
-  updateSidebar();
-});
-
-// ── API Key generation ───────────────────────────────────────
+// ══ Modal ══════════════════════════════════════════════════════
 function generateKey() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const seg = n => Array.from({length: n}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const seg = n => Array.from({length: n}, () => c[Math.floor(Math.random() * c.length)]).join('');
   return `bwk_${seg(8)}_${seg(16)}_${seg(8)}`;
 }
 
-document.getElementById('generateBtn').addEventListener('click', openModal);
-
 function openModal() {
-  const key = generateKey();
-  document.getElementById('apiKeyText').textContent = key;
+  const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
+  const plan = allPlans.find(p => p.id === selectedPlan);
+  const price = plan ? calcPlanPrice(plan) : null;
+
+  document.getElementById('apiKeyText').textContent = generateKey();
   document.getElementById('copyBtn').textContent = 'Copy';
   document.getElementById('copyBtn').classList.remove('copied');
 
-  const chips = document.getElementById('modalFeatureChips');
-  const items = [];
-  GROUPS.forEach(g => g.features.forEach(f => { if (selected.has(f.id)) items.push(f); }));
-  chips.innerHTML = items.map(f => `<span class="sel-chip">✓ ${f.name}</span>`).join('');
+  document.getElementById('modalPlanBadge').textContent =
+    plan ? `💎 ${plan.name} · ${plan.tier}` : '💎 BunkerWeb PRO';
+
+  const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
+  document.getElementById('ms-plan').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
+  document.getElementById('ms-instances').textContent = instances + (instances > 1 ? ' instances' : ' instance');
+  document.getElementById('ms-support').textContent = support
+    ? `${support.icon} ${support.name}${support.price > 0 ? ' (+' + support.price + '€/mo)' : ' (Free)'}`
+    : '—';
+  document.getElementById('ms-total').textContent = price !== null ? `${price}€` : 'Custom quote';
+
+  const chips = document.getElementById('ms-chips');
+  if (selectedFeatures.size > 0) {
+    chips.innerHTML = Array.from(selectedFeatures).map(id => {
+      const f = PRO_FEATURES.find(x => x.id === id);
+      return f ? `<span class="m-chip">${f.icon} ${f.name}</span>` : '';
+    }).join('');
+  } else {
+    chips.innerHTML = '<span style="color:var(--muted);font-size:.8rem;">All PRO features</span>';
+  }
 
   document.getElementById('modalOverlay').classList.add('visible');
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('visible');
-}
-
-function regenKey() {
-  document.getElementById('apiKeyText').textContent = generateKey();
-  document.getElementById('copyBtn').textContent = 'Copy';
-  document.getElementById('copyBtn').classList.remove('copied');
-}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('visible'); }
+function regenKey()   { document.getElementById('apiKeyText').textContent = generateKey(); }
 
 function copyKey() {
-  const text = document.getElementById('apiKeyText').textContent;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(document.getElementById('apiKeyText').textContent).then(() => {
     const btn = document.getElementById('copyBtn');
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-// Close modal on overlay click
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
 });
 
-// ── Init ─────────────────────────────────────────────────────
-render();
+// ══ Init ══════════════════════════════════════════════════════
+renderProFeatures();
+renderSupportTiers();
+renderSelfhostedPlans();
+renderCloudPlans();
 </script>
 </body>
 </html>

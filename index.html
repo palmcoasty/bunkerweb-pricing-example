@@ -601,7 +601,7 @@
 <script>
 // ══ Data ══════════════════════════════════════════════════════
 const PRO_FEATURES = [
-  { id: 'antiddos',  icon: '🌊', name: 'Anti-DDoS',           desc: 'Advanced protection against DDoS attacks', price: 10 },
+{ id: 'antiddos',  icon: '🌊', name: 'Anti-DDoS',           desc: 'Advanced protection against DDoS attacks', price: 10 },
   { id: 'backups3',  icon: '☁️', name: 'Backup S3',            desc: 'Remote backup to Amazon S3', price: 7 },
   { id: 'migration', icon: '🔄', name: 'Migration',            desc: 'Easily migrate the database between environments', price: 15 },
   { id: 'monitoring',icon: '📊', name: 'Monitoring',           desc: 'Monitor service status and performance', price: 15 },
@@ -617,6 +617,8 @@ const SELF_PLANS = [
     name: 'Shield',
     emoji: '🛡️',
     desc: 'Perfect for SMBs, tech startups, and growing IT projects.',
+    basePrice: 49,
+    extraPerInstance: 15,
     cta: 'Shield Protection',
     ctaStyle: 'outline-green',
     trial: true,
@@ -635,6 +637,8 @@ const SELF_PLANS = [
     name: 'Fortress',
     emoji: '🏰',
     desc: 'Designed for multi-site organizations, scale-ups, and sensitive industries (healthcare, finance, education).',
+    basePrice: 149,
+    extraPerInstance: 39,
     cta: 'Fortress Protection',
     ctaStyle: 'solid',
     trial: true,
@@ -653,6 +657,8 @@ const SELF_PLANS = [
     name: 'Sentinel',
     emoji: '🔭',
     desc: 'Do you have specific needs? Let\'s find a tailored solution for your unique requirements.',
+    basePrice: null,
+    extraPerInstance: 0,
     cta: "Let's discuss",
     ctaStyle: 'ghost',
     trial: false,
@@ -787,6 +793,13 @@ function calcCloudTotal() {
   return CLOUD_BASE_USD + sumSelectedFeatures();
 }
 
+/** Fixed tier price on plan cards (self-hosted): license + per-tier instance scaling + support — excludes PRO add-ons (those are in the builder bar). */
+function calcTierCardPrice(p) {
+  if (!p || p.id === 'sentinel' || typeof p.basePrice !== 'number') return null;
+  const support = getSupportPriceUsd();
+  return p.basePrice + (instances - 1) * (p.extraPerInstance || 0) + support;
+}
+
 // ══ Render support tiers ═══════════════════════════════════════
 function renderSupportTiers() {
   const grid = document.getElementById('supportGrid');
@@ -851,8 +864,8 @@ function toggleFeature(id) {
 // ══ Render self-hosted plans ════════════════════════════════════
 function renderSelfhostedPlans() {
   const grid = document.getElementById('selfhostedPlans');
-  const build = calcSelfhostedBuildTotal();
   grid.innerHTML = SELF_PLANS.map(p => {
+    const tierPrice = calcTierCardPrice(p);
     return `
       <div class="plan-card ${p.popular ? 'popular' : ''} ${selectedPlan === p.id ? 'selected' : ''}"
            onclick="selectPlan('${p.id}')">
@@ -865,18 +878,17 @@ function renderSelfhostedPlans() {
         <div>
           ${p.id !== 'sentinel' ? `
             <div class="plan-price-row">
-              <div class="plan-price">${formatMoney(build)}</div>
+              <div class="plan-price">${formatMoney(tierPrice)}</div>
               <div class="plan-price-suffix">/month</div>
             </div>
-            <div class="plan-price-note">Based on your build above</div>
+            ${instances > 1 && p.extraPerInstance ? `<div class="plan-price-note">${formatMoney(p.basePrice)} base + ${formatMoney((instances - 1) * p.extraPerInstance)} for ${instances - 1} extra instance${instances - 1 > 1 ? 's' : ''} · support included in total</div>` : '<div class="plan-price-note">License + support · not including PRO add-ons</div>'}
+            <div class="plan-price-note" style="color:var(--muted);margin-top:.25rem;">PRO add-ons billed separately — see the bar below</div>
             ${p.trial ? '<div class="plan-price-note" style="color:var(--accent);margin-top:.3rem;">✓ 30-day free trial</div>' : ''}
           ` : `
             <div class="plan-price-row">
-              <div class="plan-price">${formatMoney(build)}</div>
-              <div class="plan-price-suffix">/month</div>
+              <div class="plan-price" style="font-size:1.5rem;color:var(--muted);">Custom quote</div>
             </div>
-            <div class="plan-price-note">From your build + custom enterprise</div>
-            <div class="plan-price-note" style="color:var(--muted);margin-top:.25rem;">Get a quote for tailored SLAs & integrations</div>
+            <div class="plan-price-note">Based on your specific needs</div>
           `}
         </div>
         <button class="plan-cta ${p.ctaStyle}" onclick="selectPlan('${p.id}'); event.stopPropagation();">
@@ -926,7 +938,6 @@ function updateInstances(val) {
 // ══ Cloud plans ════════════════════════════════════════════════
 function renderCloudPlans() {
   const grid = document.getElementById('cloudPlans');
-  const build = calcCloudTotal();
   grid.innerHTML = CLOUD_PLANS.map(p => `
     <div class="plan-card ${selectedPlan === p.id ? 'selected' : ''}"
          onclick="selectPlan('${p.id}')">
@@ -939,10 +950,10 @@ function renderCloudPlans() {
         <div style="font-size:.78rem;color:var(--muted);margin-bottom:.2rem;">${p.priceLabel}</div>
         ${p.price ? `
           <div class="plan-price-row">
-            <div class="plan-price">${formatMoney(build)}</div>
+            <div class="plan-price">${formatMoney(p.price)}</div>
             <div class="plan-price-suffix">/${p.priceSuffix}</div>
           </div>
-          <div class="plan-price-note">Managed platform + your feature add-ons</div>
+          <div class="plan-price-note">Fixed managed platform · feature add-ons from the builder bar below</div>
         ` : `
           <div class="plan-price-row">
             <div class="plan-price" style="font-size:1.4rem;color:var(--muted);">${p.priceSuffix}</div>
@@ -1126,3 +1137,4 @@ updateInstances(document.getElementById('instanceRange').value);
 </script>
 </body>
 </html>
+

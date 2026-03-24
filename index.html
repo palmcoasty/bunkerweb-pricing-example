@@ -535,13 +535,13 @@
 <div class="summary-bar" id="summaryBar">
   <div class="sb-left">
     <div>
-      <div class="sb-estimate-label">Estimated total</div>
+      <div class="sb-estimate-label" id="sb-estimate-label">Your configuration</div>
       <div class="sb-plan">Plan: <strong id="sb-plan-name">—</strong></div>
       <div class="sb-price" id="sb-price-val">—</div>
     </div>
     <div class="sb-features" id="sb-chips"></div>
   </div>
-  <button class="btn-cta-bar" id="mainCta" onclick="openModal()" disabled>Get API Key →</button>
+  <button type="button" class="btn-cta-bar" id="mainCta" disabled>Get API Key →</button>
 </div>
 
 <!-- Modal -->
@@ -740,11 +740,28 @@ const SUPPORT_TIERS = [
 ];
 
 // ══ State ══════════════════════════════════════════════════════
-let selectedPlan = 'shield';
+let selectedPlan = null;
 let selectedSupport = 'community';
 let instances = 1;
 const selectedFeatures = new Set();
 let activeTab = 'selfhosted';
+
+function getSelfhostedPriceRange() {
+  const shield = SELF_PLANS.find(p => p.id === 'shield');
+  const fortress = SELF_PLANS.find(p => p.id === 'fortress');
+  if (!shield || !fortress) return null;
+  const a = calcPlanPrice(shield);
+  const b = calcPlanPrice(fortress);
+  if (typeof a !== 'number' || typeof b !== 'number' || !Number.isFinite(a) || !Number.isFinite(b)) return null;
+  return { min: Math.min(a, b), max: Math.max(a, b) };
+}
+
+function getCloudPriceRange() {
+  const withPrice = CLOUD_PLANS.filter(p => typeof p.price === 'number' && Number.isFinite(p.price));
+  if (withPrice.length === 0) return null;
+  const nums = withPrice.map(p => p.price);
+  return { min: Math.min(...nums), max: Math.max(...nums) };
+}
 
 // ══ Render support tiers ═══════════════════════════════════════
 function renderSupportTiers() {
@@ -925,30 +942,59 @@ function renderCloudPlans() {
 function updateSummaryBar() {
   const bar = document.getElementById('summaryBar');
   const cta = document.getElementById('mainCta');
-
-  if (!selectedPlan) {
-    bar.classList.remove('visible');
-    cta.disabled = true;
-    return;
-  }
+  const labelEl = document.getElementById('sb-estimate-label');
 
   bar.classList.add('visible');
 
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
-  const plan = allPlans.find(p => p.id === selectedPlan);
+  const plan = selectedPlan ? allPlans.find(p => p.id === selectedPlan) : null;
   const raw = plan ? calcPlanPrice(plan) : null;
   const price = typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
 
-  document.getElementById('sb-plan-name').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
   const instanceNote = activeTab === 'selfhosted' && instances > 1
     ? ' · ' + instances + ' instances'
     : '';
-  document.getElementById('sb-price-val').innerHTML = price !== null
-    ? `${price}€ <span>/ month${instanceNote}</span>`
-    : '<span style="font-size:.9rem;font-weight:500;">Quote based on needs</span>';
+
+  if (!selectedPlan) {
+    labelEl.textContent = 'Estimated from your choices';
+    document.getElementById('sb-plan-name').textContent = 'Not selected yet';
+    if (activeTab === 'selfhosted') {
+      const range = getSelfhostedPriceRange();
+      if (range && range.min !== range.max) {
+        document.getElementById('sb-price-val').innerHTML =
+          `${range.min}€ – ${range.max}€ <span>/ month${instanceNote}</span>`;
+      } else if (range) {
+        document.getElementById('sb-price-val').innerHTML =
+          `${range.min}€ <span>/ month${instanceNote}</span>`;
+      } else {
+        document.getElementById('sb-price-val').innerHTML =
+          '<span style="font-size:.9rem;font-weight:500;">Adjust instances & support above</span>';
+      }
+    } else {
+      const cr = getCloudPriceRange();
+      if (cr) {
+        document.getElementById('sb-price-val').innerHTML =
+          cr.min === cr.max
+            ? `From ${cr.min}€ <span>/ month</span>`
+            : `${cr.min}€ – ${cr.max}€ <span>/ month</span>`;
+      } else {
+        document.getElementById('sb-price-val').innerHTML =
+          '<span style="font-size:.9rem;font-weight:500;">Select a cloud offer below</span>';
+      }
+    }
+  } else {
+    labelEl.textContent = 'Estimated total';
+    document.getElementById('sb-plan-name').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
+    document.getElementById('sb-price-val').innerHTML = price !== null
+      ? `${price}€ <span>/ month${instanceNote}</span>`
+      : '<span style="font-size:.9rem;font-weight:500;">Quote based on needs</span>';
+  }
 
   const chipsEl = document.getElementById('sb-chips');
   const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
+  const instChip = activeTab === 'selfhosted'
+    ? `<span class="sb-chip">🖥️ ${instances} instance${instances > 1 ? 's' : ''}</span>`
+    : '';
   const supportChip = support && activeTab === 'selfhosted'
     ? `<span class="sb-chip">${support.icon} ${support.name} Support${support.price > 0 ? ' +' + support.price + '€' : ''}</span>`
     : '';
@@ -956,9 +1002,16 @@ function updateSummaryBar() {
     const f = PRO_FEATURES.find(x => x.id === id);
     return f ? `<span class="sb-chip">${f.icon} ${f.name}</span>` : '';
   });
-  chipsEl.innerHTML = supportChip + featureChips.join('') || '<span style="font-size:.75rem;color:var(--muted);">All PRO features included</span>';
+  chipsEl.innerHTML = instChip + supportChip + featureChips.join('') ||
+    '<span style="font-size:.75rem;color:var(--muted);">All PRO features included</span>';
 
-  // Quote plans → no API key, link to contact instead
+  if (!selectedPlan) {
+    cta.textContent = 'Select a plan below';
+    cta.disabled = true;
+    cta.onclick = null;
+    return;
+  }
+
   if (selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') {
     cta.textContent = "Let's discuss →";
     cta.disabled = false;
@@ -977,7 +1030,7 @@ function switchTab(tab, btn) {
   btn.classList.add('active');
   document.getElementById('tab-selfhosted').style.display = tab === 'selfhosted' ? '' : 'none';
   document.getElementById('tab-cloud').style.display = tab === 'cloud' ? '' : 'none';
-  selectedPlan = tab === 'selfhosted' ? 'shield' : 'cloud-essential';
+  selectedPlan = null;
   renderSelfhostedPlans();
   renderCloudPlans();
   updateSummaryBar();
@@ -991,6 +1044,7 @@ function generateKey() {
 }
 
 function openModal() {
+  if (!selectedPlan || selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') return;
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
   const plan = allPlans.find(p => p.id === selectedPlan);
   const raw = plan ? calcPlanPrice(plan) : null;

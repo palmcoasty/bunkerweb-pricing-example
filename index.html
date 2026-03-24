@@ -141,6 +141,9 @@
     .pf-icon { font-size: 1.3rem; flex-shrink: 0; }
     .pf-name { font-size: .85rem; font-weight: 600; }
     .pf-desc { font-size: .75rem; color: var(--muted); margin-top: .15rem; line-height: 1.4; }
+    .pf-price {
+      font-size: .78rem; font-weight: 700; color: var(--accent); margin-top: .45rem;
+    }
     .pro-badge {
       position: absolute; top: .6rem; right: .7rem;
       font-size: .62rem; font-weight: 700; letter-spacing: .06em;
@@ -326,6 +329,10 @@
     .sb-plan strong { color: var(--accent); }
     .sb-price { font-size: 1.4rem; font-weight: 800; line-height: 1.15; }
     .sb-price span { font-size: .8rem; font-weight: 400; color: var(--muted); }
+    .sb-breakdown {
+      font-size: .72rem; color: var(--muted); margin-top: .4rem; max-width: 36rem;
+      line-height: 1.45;
+    }
     .sb-features { display: flex; gap: .4rem; flex-wrap: wrap; }
     .sb-chip {
       font-size: .72rem; background: var(--accent-bg); color: var(--accent);
@@ -447,7 +454,7 @@
 <div class="hero">
   <div class="hero-badge">💎 Open-source · Self-hosted · PRO</div>
   <h1>Simple, transparent<br/><span>BunkerWeb</span> pricing</h1>
-  <p>Choose the plan that fits your scale. Start free, upgrade when you're ready.</p>
+  <p>Pick add-ons, instances, and support — your total updates live. Start at $0 and build the plan you need.</p>
 
   <!-- Segment -->
   <div class="segment">
@@ -465,7 +472,7 @@
     <!-- PRO Features picker -->
     <p class="section-eyebrow">PRO Add-ons</p>
     <h2 class="section-title">Choose your PRO features</h2>
-    <p class="section-sub">All PRO features are included in every paid plan. Select the ones you care about most to see how they map to your plan.</p>
+    <p class="section-sub">Each feature has a fixed monthly price. Toggle what you need — your running total appears at the bottom.</p>
 
     <div class="pro-features" id="proFeaturesGrid"></div>
 
@@ -474,19 +481,19 @@
       <label>Instances</label>
       <input type="range" id="instanceRange" min="1" max="20" value="1" oninput="updateInstances(this.value)" />
       <div class="instance-count" id="instanceDisplay">1</div>
-      <span class="instance-note">Price scales with additional instances</span>
+      <span class="instance-note" id="instanceNote">First instance included · +$15/mo each additional</span>
     </div>
 
     <!-- Support tiers -->
     <p class="section-eyebrow" style="margin-top:.5rem;">Support Add-on</p>
     <h2 class="section-title">Add support to your plan</h2>
-    <p class="section-sub">Pick a support level — it adds to your monthly total.</p>
+    <p class="section-sub">Support is a fixed monthly add-on on top of your feature build.</p>
     <div class="support-grid" id="supportGrid"></div>
 
     <!-- Plans -->
     <p class="section-eyebrow" style="margin-top:.5rem;">Self-Hosted Plans</p>
     <h2 class="section-title">Pick your plan</h2>
-    <p class="section-sub">30-day free trial on Shield and Fortress. No credit card required to start.</p>
+    <p class="section-sub">Your total is built above. Choose a tier to deploy — Shield and Fortress include a 30-day trial.</p>
 
     <div class="plans-grid" id="selfhostedPlans"></div>
   </div>
@@ -535,9 +542,10 @@
 <div class="summary-bar" id="summaryBar">
   <div class="sb-left">
     <div>
-      <div class="sb-estimate-label" id="sb-estimate-label">Your configuration</div>
-      <div class="sb-plan">Plan: <strong id="sb-plan-name">—</strong></div>
-      <div class="sb-price" id="sb-price-val">—</div>
+      <div class="sb-estimate-label" id="sb-estimate-label">Plan builder</div>
+      <div class="sb-plan">Deployment: <strong id="sb-plan-name">Not selected yet</strong></div>
+      <div class="sb-price" id="sb-price-val">$0</div>
+      <div class="sb-breakdown" id="sb-breakdown">Features $0 · Support $0 · Extra instances $0</div>
     </div>
     <div class="sb-features" id="sb-chips"></div>
   </div>
@@ -593,13 +601,13 @@
 <script>
 // ══ Data ══════════════════════════════════════════════════════
 const PRO_FEATURES = [
-  { id: 'antiddos',  icon: '🌊', name: 'Anti-DDoS',           desc: 'Advanced protection against DDoS attacks' },
-  { id: 'backups3',  icon: '☁️', name: 'Backup S3',            desc: 'Remote backup to Amazon S3' },
-  { id: 'migration', icon: '🔄', name: 'Migration',            desc: 'Easily migrate the database between environments' },
-  { id: 'monitoring',icon: '📊', name: 'Monitoring',           desc: 'Monitor service status and performance' },
-  { id: 'prometheus',icon: '📈', name: 'Prometheus Exporter',  desc: 'Exposes metrics for Prometheus / Grafana' },
-  { id: 'reporting', icon: '📋', name: 'Reporting',            desc: 'Weekly or monthly usage and threat reports' },
-  { id: 'usermgr',   icon: '👥', name: 'User Manager',         desc: 'Manage users and their access rights' },
+  { id: 'antiddos',  icon: '🌊', name: 'Anti-DDoS',           desc: 'Advanced protection against DDoS attacks', price: 49 },
+  { id: 'backups3',  icon: '☁️', name: 'Backup S3',            desc: 'Remote backup to Amazon S3', price: 19 },
+  { id: 'migration', icon: '🔄', name: 'Migration',            desc: 'Easily migrate the database between environments', price: 15 },
+  { id: 'monitoring',icon: '📊', name: 'Monitoring',           desc: 'Monitor service status and performance', price: 25 },
+  { id: 'prometheus',icon: '📈', name: 'Prometheus Exporter',  desc: 'Exposes metrics for Prometheus / Grafana', price: 15 },
+  { id: 'reporting', icon: '📋', name: 'Reporting',            desc: 'Weekly or monthly usage and threat reports', price: 12 },
+  { id: 'usermgr',   icon: '👥', name: 'User Manager',         desc: 'Manage users and their access rights', price: 18 },
 ];
 
 const SELF_PLANS = [
@@ -609,8 +617,6 @@ const SELF_PLANS = [
     name: 'Shield',
     emoji: '🛡️',
     desc: 'Perfect for SMBs, tech startups, and growing IT projects.',
-    basePrice: 49,
-    extraPerInstance: 15,
     cta: 'Shield Protection',
     ctaStyle: 'outline-green',
     trial: true,
@@ -629,8 +635,6 @@ const SELF_PLANS = [
     name: 'Fortress',
     emoji: '🏰',
     desc: 'Designed for multi-site organizations, scale-ups, and sensitive industries (healthcare, finance, education).',
-    basePrice: 149,
-    extraPerInstance: 39,
     cta: 'Fortress Protection',
     ctaStyle: 'solid',
     trial: true,
@@ -649,8 +653,6 @@ const SELF_PLANS = [
     name: 'Sentinel',
     emoji: '🔭',
     desc: 'Do you have specific needs? Let\'s find a tailored solution for your unique requirements.',
-    basePrice: null,
-    extraPerInstance: 0,
     cta: "Let's discuss",
     ctaStyle: 'ghost',
     trial: false,
@@ -674,7 +676,7 @@ const CLOUD_PLANS = [
     desc: 'Fully managed BunkerWeb operated by our experts. Start fast, scale with confidence.',
     priceLabel: 'Starting from',
     price: 639,
-    priceSuffix: '€/monthly',
+    priceSuffix: 'month',
     cta: 'Purchase Order',
     ctaStyle: 'solid',
     features: [
@@ -739,6 +741,10 @@ const SUPPORT_TIERS = [
   },
 ];
 
+// ══ Price builder (USD) ════════════════════════════════════════
+const INSTANCE_EXTRA_USD = 15;
+const CLOUD_BASE_USD = 639;
+
 // ══ State ══════════════════════════════════════════════════════
 let selectedPlan = null;
 let selectedSupport = 'community';
@@ -746,21 +752,39 @@ let instances = 1;
 const selectedFeatures = new Set();
 let activeTab = 'selfhosted';
 
-function getSelfhostedPriceRange() {
-  const shield = SELF_PLANS.find(p => p.id === 'shield');
-  const fortress = SELF_PLANS.find(p => p.id === 'fortress');
-  if (!shield || !fortress) return null;
-  const a = calcPlanPrice(shield);
-  const b = calcPlanPrice(fortress);
-  if (typeof a !== 'number' || typeof b !== 'number' || !Number.isFinite(a) || !Number.isFinite(b)) return null;
-  return { min: Math.min(a, b), max: Math.max(a, b) };
+function formatMoney(n) {
+  if (typeof n !== 'number' || !Number.isFinite(n)) return '—';
+  const neg = n < 0;
+  const v = Math.abs(Math.round(n));
+  return (neg ? '-' : '') + '$' + v.toLocaleString('en-US');
 }
 
-function getCloudPriceRange() {
-  const withPrice = CLOUD_PLANS.filter(p => typeof p.price === 'number' && Number.isFinite(p.price));
-  if (withPrice.length === 0) return null;
-  const nums = withPrice.map(p => p.price);
-  return { min: Math.min(...nums), max: Math.max(...nums) };
+function sumSelectedFeatures() {
+  let s = 0;
+  for (const id of selectedFeatures) {
+    const f = PRO_FEATURES.find(x => x.id === id);
+    if (f && typeof f.price === 'number') s += f.price;
+  }
+  return s;
+}
+
+function getSupportPriceUsd() {
+  const t = SUPPORT_TIERS.find(x => x.id === selectedSupport);
+  return t && typeof t.price === 'number' ? t.price : 0;
+}
+
+function getInstanceAddonUsd() {
+  return Math.max(0, instances - 1) * INSTANCE_EXTRA_USD;
+}
+
+/** Self-hosted: features + support + extra instances (starts at $0). */
+function calcSelfhostedBuildTotal() {
+  return sumSelectedFeatures() + getSupportPriceUsd() + getInstanceAddonUsd();
+}
+
+/** Cloud Essential: platform base + same feature add-ons. */
+function calcCloudTotal() {
+  return CLOUD_BASE_USD + sumSelectedFeatures();
 }
 
 // ══ Render support tiers ═══════════════════════════════════════
@@ -772,7 +796,7 @@ function renderSupportTiers() {
       <div class="support-card-header">
         <div class="support-radio"><div class="support-radio-dot"></div></div>
         <span class="support-name">${s.icon} ${s.name}</span>
-        <span class="support-price-tag ${s.price === 0 ? 'free' : ''}">${s.price === 0 ? 'Free' : '+' + s.price + '€/mo'}</span>
+        <span class="support-price-tag ${s.price === 0 ? 'free' : ''}">${s.price === 0 ? 'Free' : '+' + formatMoney(s.price) + '/mo'}</span>
       </div>
       <div class="support-desc">${s.desc}</div>
       <ul class="support-perks">
@@ -785,6 +809,8 @@ function renderSupportTiers() {
 function selectSupport(id) {
   selectedSupport = id;
   renderSupportTiers();
+  renderSelfhostedPlans();
+  renderCloudPlans();
   updateSummaryBar();
 }
 
@@ -806,6 +832,7 @@ function renderProFeatures() {
           <span class="pf-name">${f.name}</span>
         </div>
         <div class="pf-desc">${f.desc}</div>
+        <div class="pf-price">+${formatMoney(f.price)}/mo</div>
       </div>
       <div class="pro-badge">PRO</div>
     </div>
@@ -816,14 +843,16 @@ function toggleFeature(id) {
   if (selectedFeatures.has(id)) selectedFeatures.delete(id);
   else selectedFeatures.add(id);
   renderProFeatures();
+  renderSelfhostedPlans();
+  renderCloudPlans();
   updateSummaryBar();
 }
 
 // ══ Render self-hosted plans ════════════════════════════════════
 function renderSelfhostedPlans() {
   const grid = document.getElementById('selfhostedPlans');
+  const build = calcSelfhostedBuildTotal();
   grid.innerHTML = SELF_PLANS.map(p => {
-    const price = calcPlanPrice(p);
     return `
       <div class="plan-card ${p.popular ? 'popular' : ''} ${selectedPlan === p.id ? 'selected' : ''}"
            onclick="selectPlan('${p.id}')">
@@ -834,18 +863,20 @@ function renderSelfhostedPlans() {
           <div class="plan-desc">${p.desc}</div>
         </div>
         <div>
-          ${price !== null ? `
+          ${p.id !== 'sentinel' ? `
             <div class="plan-price-row">
-              <div class="plan-price">${price}€</div>
+              <div class="plan-price">${formatMoney(build)}</div>
               <div class="plan-price-suffix">/month</div>
             </div>
-            ${instances > 1 && p.extraPerInstance ? `<div class="plan-price-note">${p.basePrice}€ base + ${(instances-1)*p.extraPerInstance}€ for ${instances-1} extra instance${instances-1>1?'s':''}</div>` : ''}
+            <div class="plan-price-note">Based on your build above</div>
             ${p.trial ? '<div class="plan-price-note" style="color:var(--accent);margin-top:.3rem;">✓ 30-day free trial</div>' : ''}
           ` : `
             <div class="plan-price-row">
-              <div class="plan-price" style="font-size:1.5rem;color:var(--muted);">Get a quote</div>
+              <div class="plan-price">${formatMoney(build)}</div>
+              <div class="plan-price-suffix">/month</div>
             </div>
-            <div class="plan-price-note">Based on your specific needs</div>
+            <div class="plan-price-note">From your build + custom enterprise</div>
+            <div class="plan-price-note" style="color:var(--muted);margin-top:.25rem;">Get a quote for tailored SLAs & integrations</div>
           `}
         </div>
         <button class="plan-cta ${p.ctaStyle}" onclick="selectPlan('${p.id}'); event.stopPropagation();">
@@ -860,22 +891,6 @@ function renderSelfhostedPlans() {
       </div>
     `;
   }).join('');
-}
-
-function calcPlanPrice(p) {
-  if (!p) return null;
-  if (p.id === 'sentinel' || p.id === 'cloud-custom') return null;
-
-  const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
-  const supportAdd = activeTab === 'selfhosted' && support ? support.price : 0;
-
-  if (typeof p.basePrice === 'number') {
-    return p.basePrice + (instances - 1) * (p.extraPerInstance || 0) + supportAdd;
-  }
-  if (typeof p.price === 'number') {
-    return p.price;
-  }
-  return null;
 }
 
 function selectPlan(id) {
@@ -897,6 +912,13 @@ function selectPlan(id) {
 function updateInstances(val) {
   instances = parseInt(val);
   document.getElementById('instanceDisplay').textContent = instances;
+  const extra = Math.max(0, instances - 1);
+  const instEl = document.getElementById('instanceNote');
+  if (instEl) {
+    instEl.textContent = extra === 0
+      ? `First instance included · +${formatMoney(INSTANCE_EXTRA_USD)}/mo each additional`
+      : `+${formatMoney(extra * INSTANCE_EXTRA_USD)}/mo for ${extra} extra instance${extra > 1 ? 's' : ''}`;
+  }
   renderSelfhostedPlans();
   updateSummaryBar();
 }
@@ -904,6 +926,7 @@ function updateInstances(val) {
 // ══ Cloud plans ════════════════════════════════════════════════
 function renderCloudPlans() {
   const grid = document.getElementById('cloudPlans');
+  const build = calcCloudTotal();
   grid.innerHTML = CLOUD_PLANS.map(p => `
     <div class="plan-card ${selectedPlan === p.id ? 'selected' : ''}"
          onclick="selectPlan('${p.id}')">
@@ -916,9 +939,10 @@ function renderCloudPlans() {
         <div style="font-size:.78rem;color:var(--muted);margin-bottom:.2rem;">${p.priceLabel}</div>
         ${p.price ? `
           <div class="plan-price-row">
-            <div class="plan-price">${p.price}€</div>
-            <div class="plan-price-suffix">/${p.priceSuffix.replace('€/monthly','month')}</div>
+            <div class="plan-price">${formatMoney(build)}</div>
+            <div class="plan-price-suffix">/${p.priceSuffix}</div>
           </div>
+          <div class="plan-price-note">Managed platform + your feature add-ons</div>
         ` : `
           <div class="plan-price-row">
             <div class="plan-price" style="font-size:1.4rem;color:var(--muted);">${p.priceSuffix}</div>
@@ -943,51 +967,48 @@ function updateSummaryBar() {
   const bar = document.getElementById('summaryBar');
   const cta = document.getElementById('mainCta');
   const labelEl = document.getElementById('sb-estimate-label');
+  const breakdownEl = document.getElementById('sb-breakdown');
 
   bar.classList.add('visible');
 
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
   const plan = selectedPlan ? allPlans.find(p => p.id === selectedPlan) : null;
-  const raw = plan ? calcPlanPrice(plan) : null;
-  const price = typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
 
-  const instanceNote = activeTab === 'selfhosted' && instances > 1
-    ? ' · ' + instances + ' instances'
-    : '';
+  const featuresSub = sumSelectedFeatures();
+  const supportSub = activeTab === 'selfhosted' ? getSupportPriceUsd() : 0;
+  const instSub = activeTab === 'selfhosted' ? getInstanceAddonUsd() : 0;
 
-  if (!selectedPlan) {
-    labelEl.textContent = 'Estimated from your choices';
-    document.getElementById('sb-plan-name').textContent = 'Not selected yet';
-    if (activeTab === 'selfhosted') {
-      const range = getSelfhostedPriceRange();
-      if (range && range.min !== range.max) {
-        document.getElementById('sb-price-val').innerHTML =
-          `${range.min}€ – ${range.max}€ <span>/ month${instanceNote}</span>`;
-      } else if (range) {
-        document.getElementById('sb-price-val').innerHTML =
-          `${range.min}€ <span>/ month${instanceNote}</span>`;
-      } else {
-        document.getElementById('sb-price-val').innerHTML =
-          '<span style="font-size:.9rem;font-weight:500;">Adjust instances & support above</span>';
-      }
-    } else {
-      const cr = getCloudPriceRange();
-      if (cr) {
-        document.getElementById('sb-price-val').innerHTML =
-          cr.min === cr.max
-            ? `From ${cr.min}€ <span>/ month</span>`
-            : `${cr.min}€ – ${cr.max}€ <span>/ month</span>`;
-      } else {
-        document.getElementById('sb-price-val').innerHTML =
-          '<span style="font-size:.9rem;font-weight:500;">Select a cloud offer below</span>';
-      }
-    }
+  labelEl.textContent = 'Plan builder';
+
+  if (activeTab === 'selfhosted') {
+    const total = calcSelfhostedBuildTotal();
+    document.getElementById('sb-plan-name').textContent = plan
+      ? `${plan.emoji} ${plan.name}`
+      : 'Not selected yet';
+    document.getElementById('sb-price-val').innerHTML =
+      `${formatMoney(total)} <span>/ month</span>`;
+    breakdownEl.textContent =
+      `Features ${formatMoney(featuresSub)} · Support ${formatMoney(supportSub)} · Extra instances ${formatMoney(instSub)}`;
   } else {
-    labelEl.textContent = 'Estimated total';
-    document.getElementById('sb-plan-name').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
-    document.getElementById('sb-price-val').innerHTML = price !== null
-      ? `${price}€ <span>/ month${instanceNote}</span>`
-      : '<span style="font-size:.9rem;font-weight:500;">Quote based on needs</span>';
+    document.getElementById('sb-plan-name').textContent = plan
+      ? `${plan.emoji} ${plan.name}`
+      : 'Not selected yet';
+    if (!selectedPlan) {
+      document.getElementById('sb-price-val').innerHTML =
+        `${formatMoney(0)} <span>/ month</span>`;
+      breakdownEl.textContent =
+        'Pick Cloud Essential to add the platform fee — feature add-ons stack when Essential is selected';
+    } else if (selectedPlan === 'cloud-custom') {
+      document.getElementById('sb-price-val').innerHTML =
+        '<span style="font-size:.95rem;font-weight:600;">Custom quote</span>';
+      breakdownEl.textContent = 'We’ll price based on your requirements';
+    } else {
+      const total = calcCloudTotal();
+      document.getElementById('sb-price-val').innerHTML =
+        `${formatMoney(total)} <span>/ month</span>`;
+      breakdownEl.textContent =
+        `Platform ${formatMoney(CLOUD_BASE_USD)} · Feature add-ons ${formatMoney(featuresSub)}`;
+    }
   }
 
   const chipsEl = document.getElementById('sb-chips');
@@ -995,18 +1016,19 @@ function updateSummaryBar() {
   const instChip = activeTab === 'selfhosted'
     ? `<span class="sb-chip">🖥️ ${instances} instance${instances > 1 ? 's' : ''}</span>`
     : '';
-  const supportChip = support && activeTab === 'selfhosted'
-    ? `<span class="sb-chip">${support.icon} ${support.name} Support${support.price > 0 ? ' +' + support.price + '€' : ''}</span>`
+  const supportChip = activeTab === 'selfhosted' && support
+    ? `<span class="sb-chip">${support.icon} ${support.name} · ${formatMoney(supportSub)}</span>`
     : '';
   const featureChips = Array.from(selectedFeatures).map(id => {
     const f = PRO_FEATURES.find(x => x.id === id);
-    return f ? `<span class="sb-chip">${f.icon} ${f.name}</span>` : '';
+    return f ? `<span class="sb-chip">${f.icon} ${f.name} +${formatMoney(f.price)}</span>` : '';
   });
-  chipsEl.innerHTML = instChip + supportChip + featureChips.join('') ||
-    '<span style="font-size:.75rem;color:var(--muted);">All PRO features included</span>';
+  const chipStr = instChip + supportChip + featureChips.join('');
+  chipsEl.innerHTML = chipStr ||
+    '<span style="font-size:.75rem;color:var(--muted);">No add-ons yet — toggle features above</span>';
 
   if (!selectedPlan) {
-    cta.textContent = 'Select a plan below';
+    cta.textContent = activeTab === 'selfhosted' ? 'Select a deployment tier' : 'Select a cloud plan';
     cta.disabled = true;
     cta.onclick = null;
     return;
@@ -1047,8 +1069,7 @@ function openModal() {
   if (!selectedPlan || selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') return;
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
   const plan = allPlans.find(p => p.id === selectedPlan);
-  const raw = plan ? calcPlanPrice(plan) : null;
-  const price = typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+  const price = activeTab === 'cloud' ? calcCloudTotal() : calcSelfhostedBuildTotal();
 
   document.getElementById('apiKeyText').textContent = generateKey();
   document.getElementById('copyBtn').textContent = 'Copy';
@@ -1059,11 +1080,15 @@ function openModal() {
 
   const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
   document.getElementById('ms-plan').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
-  document.getElementById('ms-instances').textContent = instances + (instances > 1 ? ' instances' : ' instance');
-  document.getElementById('ms-support').textContent = support
-    ? `${support.icon} ${support.name}${support.price > 0 ? ' (+' + support.price + '€/mo)' : ' (Free)'}`
-    : '—';
-  document.getElementById('ms-total').textContent = price !== null ? `${price}€` : 'Custom quote';
+  document.getElementById('ms-instances').textContent = activeTab === 'cloud'
+    ? '—'
+    : instances + (instances > 1 ? ' instances' : ' instance');
+  document.getElementById('ms-support').textContent = activeTab === 'cloud'
+    ? 'Included in Cloud'
+    : (support
+      ? `${support.icon} ${support.name} (${support.price > 0 ? formatMoney(support.price) + '/mo' : 'Free'})`
+      : '—');
+  document.getElementById('ms-total').textContent = formatMoney(price);
 
   const chips = document.getElementById('ms-chips');
   if (selectedFeatures.size > 0) {
@@ -1096,9 +1121,8 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
 // ══ Init ══════════════════════════════════════════════════════
 renderProFeatures();
 renderSupportTiers();
-renderSelfhostedPlans();
 renderCloudPlans();
-updateSummaryBar();
+updateInstances(document.getElementById('instanceRange').value);
 </script>
 </body>
 </html>

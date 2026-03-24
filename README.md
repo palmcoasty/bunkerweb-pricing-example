@@ -1,3 +1,5 @@
+# !!! Disclaimer this is a example to showcase how a pricing system could be implimented in bunkerweb, it is build by a community fellow and is not confirmed nor creating any api keys for bunkerweb its just a simple demonstration.
+
 # BunkerWeb Pricing Page
 
 A static GitHub Pages site styled after [BunkerWeb](https://github.com/bunkerity/bunkerweb) that replicates the official pricing structure — self-hosted plans, cloud offer, PRO feature selection, instance-based pricing, and API key generation.

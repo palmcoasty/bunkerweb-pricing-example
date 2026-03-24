@@ -65,7 +65,18 @@
     .btn-green:hover { opacity: .85; }
 
     /* ── Hero ── */
-    .hero { text-align: center; padding: 4.5rem 1rem 3rem; }
+    .hero {
+      text-align: center; padding: 4.5rem 1rem 3rem;
+      position: relative; isolation: isolate;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: -1;
+      background:
+        radial-gradient(ellipse 90% 60% at 50% -30%, rgba(74, 222, 128, 0.14), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 80% 40%, rgba(96, 165, 250, 0.06), transparent 50%);
+      pointer-events: none;
+    }
     .hero-badge {
       display: inline-flex; align-items: center; gap: .4rem;
       background: var(--accent-bg); border: 1px solid var(--accent-dim);
@@ -294,8 +305,12 @@
     /* ── Summary bar (fixed bottom) ── */
     .summary-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: var(--surface); border-top: 1px solid var(--border);
-      padding: .85rem 2rem; z-index: 99;
+      background: rgba(26, 29, 39, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
+      padding: .95rem 2rem; z-index: 99;
       display: flex; align-items: center; justify-content: space-between;
       transform: translateY(100%);
       transition: transform .3s ease;
@@ -303,9 +318,13 @@
     }
     .summary-bar.visible { transform: translateY(0); }
     .sb-left { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+    .sb-estimate-label {
+      font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: .2rem;
+    }
     .sb-plan { font-size: .85rem; }
     .sb-plan strong { color: var(--accent); }
-    .sb-price { font-size: 1.4rem; font-weight: 800; }
+    .sb-price { font-size: 1.4rem; font-weight: 800; line-height: 1.15; }
     .sb-price span { font-size: .8rem; font-weight: 400; color: var(--muted); }
     .sb-features { display: flex; gap: .4rem; flex-wrap: wrap; }
     .sb-chip {
@@ -516,6 +535,7 @@
 <div class="summary-bar" id="summaryBar">
   <div class="sb-left">
     <div>
+      <div class="sb-estimate-label">Estimated total</div>
       <div class="sb-plan">Plan: <strong id="sb-plan-name">—</strong></div>
       <div class="sb-price" id="sb-price-val">—</div>
     </div>
@@ -720,7 +740,7 @@ const SUPPORT_TIERS = [
 ];
 
 // ══ State ══════════════════════════════════════════════════════
-let selectedPlan = null;
+let selectedPlan = 'shield';
 let selectedSupport = 'community';
 let instances = 1;
 const selectedFeatures = new Set();
@@ -826,9 +846,19 @@ function renderSelfhostedPlans() {
 }
 
 function calcPlanPrice(p) {
-  if (p.basePrice === null) return null;
+  if (!p) return null;
+  if (p.id === 'sentinel' || p.id === 'cloud-custom') return null;
+
   const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
-  return p.basePrice + (instances - 1) * (p.extraPerInstance || 0) + (support ? support.price : 0);
+  const supportAdd = activeTab === 'selfhosted' && support ? support.price : 0;
+
+  if (typeof p.basePrice === 'number') {
+    return p.basePrice + (instances - 1) * (p.extraPerInstance || 0) + supportAdd;
+  }
+  if (typeof p.price === 'number') {
+    return p.price;
+  }
+  return null;
 }
 
 function selectPlan(id) {
@@ -906,16 +936,20 @@ function updateSummaryBar() {
 
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
   const plan = allPlans.find(p => p.id === selectedPlan);
-  const price = plan ? calcPlanPrice(plan) : null;
+  const raw = plan ? calcPlanPrice(plan) : null;
+  const price = typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
 
   document.getElementById('sb-plan-name').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
+  const instanceNote = activeTab === 'selfhosted' && instances > 1
+    ? ' · ' + instances + ' instances'
+    : '';
   document.getElementById('sb-price-val').innerHTML = price !== null
-    ? `${price}€ <span>/ month${instances > 1 ? ' · ' + instances + ' instances' : ''}</span>`
+    ? `${price}€ <span>/ month${instanceNote}</span>`
     : '<span style="font-size:.9rem;font-weight:500;">Quote based on needs</span>';
 
   const chipsEl = document.getElementById('sb-chips');
   const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
-  const supportChip = support
+  const supportChip = support && activeTab === 'selfhosted'
     ? `<span class="sb-chip">${support.icon} ${support.name} Support${support.price > 0 ? ' +' + support.price + '€' : ''}</span>`
     : '';
   const featureChips = Array.from(selectedFeatures).map(id => {
@@ -943,7 +977,9 @@ function switchTab(tab, btn) {
   btn.classList.add('active');
   document.getElementById('tab-selfhosted').style.display = tab === 'selfhosted' ? '' : 'none';
   document.getElementById('tab-cloud').style.display = tab === 'cloud' ? '' : 'none';
-  selectedPlan = null;
+  selectedPlan = tab === 'selfhosted' ? 'shield' : 'cloud-essential';
+  renderSelfhostedPlans();
+  renderCloudPlans();
   updateSummaryBar();
 }
 
@@ -957,7 +993,8 @@ function generateKey() {
 function openModal() {
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
   const plan = allPlans.find(p => p.id === selectedPlan);
-  const price = plan ? calcPlanPrice(plan) : null;
+  const raw = plan ? calcPlanPrice(plan) : null;
+  const price = typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
 
   document.getElementById('apiKeyText').textContent = generateKey();
   document.getElementById('copyBtn').textContent = 'Copy';
@@ -1007,6 +1044,7 @@ renderProFeatures();
 renderSupportTiers();
 renderSelfhostedPlans();
 renderCloudPlans();
+updateSummaryBar();
 </script>
 </body>
 </html>

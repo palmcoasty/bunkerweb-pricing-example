@@ -576,7 +576,7 @@
       <div class="modal-summary-title">Order summary</div>
       <div class="ms-row"><span>Plan</span><span id="ms-plan">—</span></div>
       <div class="ms-row"><span>Instances</span><span id="ms-instances">1</span></div>
-      <div class="ms-row"><span>PRO features</span><span id="ms-features">All included</span></div>
+      <div class="ms-row"><span>PRO features</span><span id="ms-features">—</span></div>
       <div class="ms-row"><span>Support tier</span><span id="ms-support">—</span></div>
       <div class="ms-row"><span>Selected add-ons</span><div class="chips-row" id="ms-chips"></div></div>
       <div class="ms-row"><span>Total / month</span><span id="ms-total">—</span></div>
@@ -1129,6 +1129,14 @@ function openModal() {
     : (support
       ? `${support.icon} ${support.name} (${support.price > 0 ? formatMoney(support.price) + '/mo' : 'Free'})`
       : '—');
+
+  const featCount = selectedFeatures.size;
+  const featSum = sumSelectedFeatures();
+  document.getElementById('ms-features').textContent =
+    featCount === 0
+      ? 'None selected'
+      : `${featCount} add-on${featCount > 1 ? 's' : ''} · ${formatMoney(featSum)}/mo`;
+
   document.getElementById('ms-total').textContent = formatMoney(price);
 
   const chips = document.getElementById('ms-chips');

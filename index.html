@@ -490,10 +490,10 @@
     <p class="section-sub">Support is a fixed monthly add-on on top of your feature build.</p>
     <div class="support-grid" id="supportGrid"></div>
 
-    <!-- Plans -->
-    <p class="section-eyebrow" style="margin-top:.5rem;">Self-Hosted Plans</p>
-    <h2 class="section-title">Pick your plan</h2>
-    <p class="section-sub">Your total is built above. Choose a tier to deploy — Shield and Fortress include a 30-day trial.</p>
+    <!-- Optional enterprise tiers (reference pricing — not required for checkout) -->
+    <p class="section-eyebrow" style="margin-top:.5rem;">Optional</p>
+    <h2 class="section-title">Enterprise deployment tiers</h2>
+    <p class="section-sub">Reference pricing for named bundles. Your custom plan above is independent — you don’t need to pick a tier to continue.</p>
 
     <div class="plans-grid" id="selfhostedPlans"></div>
   </div>
@@ -543,7 +543,7 @@
   <div class="sb-left">
     <div>
       <div class="sb-estimate-label" id="sb-estimate-label">Plan builder</div>
-      <div class="sb-plan">Deployment: <strong id="sb-plan-name">Not selected yet</strong></div>
+      <div class="sb-plan">Plan: <strong id="sb-plan-name">Custom build</strong></div>
       <div class="sb-price" id="sb-price-val">$0</div>
       <div class="sb-breakdown" id="sb-breakdown">Features $0 · Support $0 · Extra instances $0</div>
     </div>
@@ -994,8 +994,8 @@ function updateSummaryBar() {
   if (activeTab === 'selfhosted') {
     const total = calcSelfhostedBuildTotal();
     document.getElementById('sb-plan-name').textContent = plan
-      ? `${plan.emoji} ${plan.name}`
-      : 'Not selected yet';
+      ? `${plan.emoji} ${plan.name} · optional`
+      : 'Custom build';
     document.getElementById('sb-price-val').innerHTML =
       `${formatMoney(total)} <span>/ month</span>`;
     breakdownEl.textContent =
@@ -1038,14 +1038,34 @@ function updateSummaryBar() {
   chipsEl.innerHTML = chipStr ||
     '<span style="font-size:.75rem;color:var(--muted);">No add-ons yet — toggle features above</span>';
 
+  if (activeTab === 'selfhosted') {
+    const total = calcSelfhostedBuildTotal();
+    if (selectedPlan === 'sentinel') {
+      cta.textContent = "Let's discuss →";
+      cta.disabled = false;
+      cta.onclick = () => window.open('https://panel.bunkerweb.io', '_blank');
+      return;
+    }
+    if (total <= 0) {
+      cta.textContent = 'Add features or support to continue';
+      cta.disabled = true;
+      cta.onclick = null;
+      return;
+    }
+    cta.textContent = 'Get API Key →';
+    cta.disabled = false;
+    cta.onclick = openModal;
+    return;
+  }
+
   if (!selectedPlan) {
-    cta.textContent = activeTab === 'selfhosted' ? 'Select a deployment tier' : 'Select a cloud plan';
+    cta.textContent = 'Select a cloud plan';
     cta.disabled = true;
     cta.onclick = null;
     return;
   }
 
-  if (selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') {
+  if (selectedPlan === 'cloud-custom') {
     cta.textContent = "Let's discuss →";
     cta.disabled = false;
     cta.onclick = () => window.open('https://panel.bunkerweb.io', '_blank');
@@ -1077,9 +1097,14 @@ function generateKey() {
 }
 
 function openModal() {
-  if (!selectedPlan || selectedPlan === 'sentinel' || selectedPlan === 'cloud-custom') return;
+  if (activeTab === 'cloud') {
+    if (!selectedPlan || selectedPlan === 'cloud-custom') return;
+  } else {
+    if (selectedPlan === 'sentinel') return;
+  }
+
   const allPlans = [...SELF_PLANS, ...CLOUD_PLANS];
-  const plan = allPlans.find(p => p.id === selectedPlan);
+  const plan = selectedPlan ? allPlans.find(p => p.id === selectedPlan) : null;
   const price = activeTab === 'cloud' ? calcCloudTotal() : calcSelfhostedBuildTotal();
 
   document.getElementById('apiKeyText').textContent = generateKey();
@@ -1087,10 +1112,15 @@ function openModal() {
   document.getElementById('copyBtn').classList.remove('copied');
 
   document.getElementById('modalPlanBadge').textContent =
-    plan ? `💎 ${plan.name} · ${plan.tier}` : '💎 BunkerWeb PRO';
+    activeTab === 'selfhosted'
+      ? (plan ? `💎 Custom build · ${plan.name} (optional tier)` : '💎 Custom build · Self-hosted')
+      : (plan ? `💎 ${plan.name} · ${plan.tier}` : '💎 BunkerWeb PRO');
 
   const support = SUPPORT_TIERS.find(s => s.id === selectedSupport);
-  document.getElementById('ms-plan').textContent = plan ? `${plan.emoji} ${plan.name}` : '—';
+  document.getElementById('ms-plan').textContent =
+    activeTab === 'selfhosted'
+      ? (plan ? `Custom build · ${plan.emoji} ${plan.name} (reference only)` : 'Custom build (self-hosted)')
+      : (plan ? `${plan.emoji} ${plan.name}` : '—');
   document.getElementById('ms-instances').textContent = activeTab === 'cloud'
     ? '—'
     : instances + (instances > 1 ? ' instances' : ' instance');
@@ -1108,7 +1138,7 @@ function openModal() {
       return f ? `<span class="m-chip">${f.icon} ${f.name}</span>` : '';
     }).join('');
   } else {
-    chips.innerHTML = '<span style="color:var(--muted);font-size:.8rem;">All PRO features</span>';
+    chips.innerHTML = '<span style="color:var(--muted);font-size:.8rem;">No PRO add-ons in this build</span>';
   }
 
   document.getElementById('modalOverlay').classList.add('visible');
@@ -1137,4 +1167,3 @@ updateInstances(document.getElementById('instanceRange').value);
 </script>
 </body>
 </html>
-
